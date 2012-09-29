@@ -1,0 +1,35 @@
+--CODENAME: raxacoricofallapatorius--
+<program>::='PROGRAM',' ',<identifier>,\n,'BEGIN',''\n,<block>,\n,'END.'
+<identifier>::=[a-zA-Z][a-zA-Z0-9]*.
+<derclaration>::='def',' ',<identifier>,':',<type>.
+<initialization> ::= {declaration>|<identifier>},':=',{<identifier>|<string>|<numeric>}.
+<string>::='"',([\w]^")*,'"'.
+<block>::='BEGIN','\n',{<function>|<initialization>|<structures>|<statment>}*,'\n','END'.
+<structures>::={<if_block>|<while_block>|<for_block>}*.
+<function>::='function',' ','(',{<identifier>,':',<type>},')',':',<type>,' ',<function_block>.
+<function_block>::='BEGIN','\n',{<structures>|<block>|<initialization>}*,'\n','END'.
+<if_else_block>::=<if_block>,'\n','else','\n',<block>.
+<if_block>::='if','(',<logical_expression>,')',' ','then',' ',<block>.
+<while_block>::='while','(',<logical_expression>,')',<block>.
+<for_block>::='for','(',<initialization>,';',<logical_expression>,';',{<initialization>|<statment>}')','\n',<block>.
+<statment>::=<statment_math>|<statment_logic>
+<statment_math>::=<identifier>':='{<identifier>|<numeric>},<math_literal>,{<identifier>|<numeric>}.
+<statment_logic>::=<identifier>':='{<identifier>|<numeric>},<logic_literal>,{<identifier>|<numeric>}.
+<logical_expression>::={<identifier>|<numeric>}<logic_literal>{<identifier>|<numeric>}.
+<numeric>::={<type_sign_decimal>|<type_sign_float>}
+<type_void> ::= void.
+<type_decimal> ::= int.
+<type_floating_point> ::= float.
+<type> ::= int|bool|float|str|void|<type_array>.
+<type_array> ::= {<type_sign_decimal> [] | <type_sign_float> []}
+<type_sign_decimal>::=?<sign>,<digit>.
+<type_sign_float>::=?<sign>,<floating_point_literal>.
+<sign>::= +|-.
+<array_get>::=<identifier>,'[',<type_sign_decimal>,']'.
+<floating_point_literal>::=<digit>.<digit>.
+<boolean_literal>::=true|false.
+<digit> ::= [\d]*.
+<char> ::= [\w].
+<math_literal>::=+|-|*|/|%|'div'.
+<logical_literal>::='!'|'!='|'||'|'&&'|'<'|'>'|'>='|'<='.
+<keyword>::= <type>|<boolean_literal>|function|program|for|while|if|then|else|begin|end|continue|break|const|def
