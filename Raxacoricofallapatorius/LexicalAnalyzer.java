@@ -29,10 +29,10 @@ public class LexicalAnalyzer {
 	public void parse() {
 		BufferedReader bf;
 		try {
-			// if file is in directory - use file. This is an pre-pre-pre-pre
-			// ... -pre alpha moment, that will be replaced by some serious
-			// stuff, like cyborgs, or sharks with AK-47's or a dino with a
-			// rocket launcher ^^
+		// if file is in directory - use file. This is an pre-pre-pre-pre
+		// ... -pre alpha moment, that will be replaced by some serious
+		// stuff, like cyborgs, or sharks with AK-47's or a dino with a
+		// rocket launcher ^^
 			if ((new File(code).exists())) {
 				bf = new BufferedReader(new FileReader(code));
 				// code = "";
