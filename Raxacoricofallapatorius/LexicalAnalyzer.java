@@ -32,7 +32,7 @@ public class LexicalAnalyzer {
 			// if file is in directory - use file. This is an pre-pre-pre-pre
 			// ... -pre alpha moment, that will be replaced by some serious
 			// stuff, like cyborgs, or sharks with AK-47's or a dino with a
-			// rocket launcher
+			// rocket launcher ^^
 			if ((new File(code).exists())) {
 				bf = new BufferedReader(new FileReader(code));
 				// code = "";
@@ -45,7 +45,8 @@ public class LexicalAnalyzer {
 				bf.close();
 			}
 			bf = new BufferedReader(new StringReader(code));
-			// String buf; // wierdo buffer. Cosmic power told me that I need it
+			// String buf; // wierdo buffer. Cosmic power told me that I need it 
+			//Just need it, like ice-cream
 			char ch;
 			while (bf.ready()) {
 				curChar++;
