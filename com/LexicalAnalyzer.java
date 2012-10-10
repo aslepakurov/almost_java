@@ -26,7 +26,7 @@ public class LexicalAnalyzer {
 					}
 				}
 			bf = new BufferedReader(new StringReader(code));
-			String buf;							//wierdo buffer. Cosmic poser told me that I need it
+			String buf;							//wierdo buffer. Cosmic power told me that I need it
 			char ch;
 			while(bf.ready()){
 				curChar++;
