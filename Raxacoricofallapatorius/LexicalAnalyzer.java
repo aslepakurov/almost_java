@@ -15,7 +15,7 @@ public class LexicalAnalyzer {
 	 * Consructor, kep :)
 	 * 
 	 * @param code
-	 *            source code or file name
+	 *            source code 
 	 */
 	public LexicalAnalyzer(String code) {
 		this.code = code;
@@ -33,14 +33,6 @@ public class LexicalAnalyzer {
 			// ... -pre alpha moment, that will be replaced by some serious
 			// stuff, like cyborgs, or sharks with AK-47's or a dino with a
 			// rocket launcher ^^
-			bf = new BufferedReader(new FileReader(code));
-			String string;
-			StringBuffer sb = new StringBuffer();
-			while ((string = bf.readLine()) != null) {
-				sb.append(string);
-			}
-			code = sb.toString();
-			bf.close();
 			bf = new BufferedReader(new StringReader(code));
 			// String buf; // wierdo buffer. Cosmic power told me that I need it
 			// Just need it, like ice-cream
