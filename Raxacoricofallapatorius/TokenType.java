@@ -1,0 +1,3 @@
+public enum TokenType {
+	KEYWORD,IDENTIFIER,COMPRASION,NUMBER,LITERAL;
+}

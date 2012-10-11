@@ -7,4 +7,7 @@ public class Token {
 		this.type = type;
 		this.line = line;
 	}
+	public String toString(){
+		return name+" "+type+" "+line;
+	}
 }
