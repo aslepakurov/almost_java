@@ -1,26 +1,51 @@
 import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
 import java.io.IOException;
 import java.io.StringReader;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 public class LexicalAnalyzer {
 	public int curLine = 1;
 	public int curChar = 0;
-	ArrayList<Token> tokens = new ArrayList<Token>();
-	String code = null;
+	private ArrayList<Token> tokens = new ArrayList<Token>();
+	private String code = null;
+	private Iterator<Token> tokenIterator;
 
 	/**
 	 * Consructor, kep :)
 	 * 
 	 * @param code
-	 *            source code 
+	 *            source code
 	 */
 	public LexicalAnalyzer(String code) {
 		this.code = code;
 	}
-
+	/**
+	 * For syntax analyzer
+	 * @see SyntaxAnalyzer (some of this days...some og this days)
+	 * @return token iterator, kinda obvious
+	 */
+	public Iterator<Token> initializeIterator(){
+		tokenIterator = tokens.iterator();
+		return tokenIterator;
+	}
+	/**
+	 * For syntax analyzer
+	 * @see SyntaxAnalyzer (some of this days...some og this days)
+	 * @return next token
+	 */
+	public Token nextToken(){
+		if(hasNextToken()) return tokenIterator.next();
+		else return null;
+	}
+	/**
+	 * For syntax analyzer
+	 * @see SyntaxAnalyzer (some of this days...some og this days)
+	 * @return either next token exists
+	 */
+	public boolean hasNextToken(){
+		return tokenIterator.hasNext();
+	}
 	/**
 	 * method for parsing source code
 	 * 
@@ -35,40 +60,39 @@ public class LexicalAnalyzer {
 			// rocket launcher ^^
 			bf = new BufferedReader(new StringReader(code));
 			// String buf; // wierdo buffer. Cosmic power told me that I need it
-			// Just need it, like ice-cream
+			// Just need it, like ice-cream of fish fingers with custard
 			char ch;
 			while (bf.ready()) {
 				curChar++;
 				ch = (char) bf.read();
 				switch (ch) {
-				// make it ...
-				case 'a':
-				case 'b':
-				case 'c':
-				case 'd':
-				case 'e':
-				case 'f':
-				case 'g':
-				case 'h':
-				case 'i':
-				case 'j':
-				case 'k':
-				case 'l':
-				case 'm':
-				case 'n':
-				case 'o':
-				case 'p':
-				case 'q':
-				case 'r':
-				case 's':
-				case 't':
-				case 'u':
-				case 'v':
-				case 'w':
-				case 'x':
-				case 'y':
-				case 'z':
-					// ... fully
+				//sense don't need we this
+//				case 'a':
+//				case 'b':
+//				case 'c':
+//				case 'd':
+//				case 'e':
+//				case 'f':
+//				case 'g':
+//				case 'h':
+//				case 'i':
+//				case 'j':
+//				case 'k':
+//				case 'l':
+//				case 'm':
+//				case 'n':
+//				case 'o':
+//				case 'p':
+//				case 'q':
+//				case 'r':
+//				case 's':
+//				case 't':
+//				case 'u':
+//				case 'v':
+//				case 'w':
+//				case 'x':
+//				case 'y':
+//				case 'z':
 				case '\n': {
 					curLine++;
 					curChar = 0;
@@ -88,7 +112,4 @@ public class LexicalAnalyzer {
 		}
 	}
 
-	public static void main(String[] args) {
-
-	}
 }
