@@ -1,12 +1,9 @@
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.StringReader;
 import java.util.ArrayList;
 import java.util.Iterator;
 
 public class LexicalAnalyzer {
 	public int curLine = 1;
-	public int curChar = 0;
+	public int curCharL = 0;
 	private ArrayList<Token> tokens = new ArrayList<Token>();
 	private String code = null;
 	private Iterator<Token> tokenIterator;
@@ -52,19 +49,16 @@ public class LexicalAnalyzer {
 	 * i think this method must be in separated thread
 	 */
 	public void parse() {
-		BufferedReader bf;
-		try {
 			// if file is in directory - use file. This is an pre-pre-pre-pre
 			// ... -pre alpha moment, that will be replaced by some serious
 			// stuff, like cyborgs, or sharks with AK-47's or a dino with a
 			// rocket launcher ^^
-			bf = new BufferedReader(new StringReader(code));
-			// String buf; // wierdo buffer. Cosmic power told me that I need it
+			// wierdo buffer. Cosmic power told me that I need it
 			// Just need it, like ice-cream of fish fingers with custard
 			char ch;
-			while (bf.ready()) {
-				curChar++;
-				ch = (char) bf.read();
+			for(int curCh =0;curCh<code.length();curCh++) {
+				curCharL++;
+				ch = code.charAt(curCh);
 				switch (ch) {
 				//sense don't need we this
 //				case 'a':
@@ -95,21 +89,16 @@ public class LexicalAnalyzer {
 //				case 'z':
 				case '\n': {
 					curLine++;
-					curChar = 0;
+					curCharL = 0;
 					break;
 				}
-				case ' ': {
-
-					break;
-				}
-				}
+//				case ' ': {
+//
+//					break;
+//				}
+				
 			}
-
-			bf.close();
-		} catch (IOException e) {
-			e.printStackTrace();
-			System.out.printf("Problem at %d,%d", curLine, curChar);
-		}
 	}
-
+	}
 }
+
