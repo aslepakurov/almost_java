@@ -3,11 +3,9 @@ import java.util.Iterator;
 
 public class LexicalAnalyzer {
 	public int curLine = 1;
-	public int curCharL = 0;
+	public int curCharLine = 0;
 	private ArrayList<Token> tokens = new ArrayList<Token>();
 	private String code = null;
-	private Iterator<Token> tokenIterator;
-
 	/**
 	 * Consructor, kep :)
 	 * 
@@ -18,30 +16,11 @@ public class LexicalAnalyzer {
 		this.code = code;
 	}
 	/**
-	 * For syntax analyzer
-	 * @see SyntaxAnalyzer (some of this days...some og this days)
-	 * @return token iterator, kinda obvious
+	 * Token getter
+	 * @return Arraylist of Tokens
 	 */
-	public Iterator<Token> initializeIterator(){
-		tokenIterator = tokens.iterator();
-		return tokenIterator;
-	}
-	/**
-	 * For syntax analyzer
-	 * @see SyntaxAnalyzer (some of this days...some og this days)
-	 * @return next token
-	 */
-	public Token nextToken(){
-		if(hasNextToken()) return tokenIterator.next();
-		else return null;
-	}
-	/**
-	 * For syntax analyzer
-	 * @see SyntaxAnalyzer (some of this days...some og this days)
-	 * @return either next token exists
-	 */
-	public boolean hasNextToken(){
-		return tokenIterator.hasNext();
+	public ArrayList<Token> getTokens() {
+		return tokens;
 	}
 	/**
 	 * method for parsing source code
@@ -56,48 +35,30 @@ public class LexicalAnalyzer {
 			// wierdo buffer. Cosmic power told me that I need it
 			// Just need it, like ice-cream of fish fingers with custard
 			char ch;
+			String buf = ""; 
 			for(int curCh =0;curCh<code.length();curCh++) {
-				curCharL++;
+				curCharLine++;
 				ch = code.charAt(curCh);
-				switch (ch) {
-				//sense don't need we this
-//				case 'a':
-//				case 'b':
-//				case 'c':
-//				case 'd':
-//				case 'e':
-//				case 'f':
-//				case 'g':
-//				case 'h':
-//				case 'i':
-//				case 'j':
-//				case 'k':
-//				case 'l':
-//				case 'm':
-//				case 'n':
-//				case 'o':
-//				case 'p':
-//				case 'q':
-//				case 'r':
-//				case 's':
-//				case 't':
-//				case 'u':
-//				case 'v':
-//				case 'w':
-//				case 'x':
-//				case 'y':
-//				case 'z':
-				case '\n': {
-					curLine++;
-					curCharL = 0;
-					break;
+				for(int sepIndex=0;sepIndex<ConstHolder.separators.length;sepIndex++){
+					Token word = null;
+					Token separator = null;
+					if(ConstHolder.separators[sepIndex].charAt(0)==ch){
+						boolean isKeyword = false;
+						for(int keyIndex=0;keyIndex<ConstHolder.keywords.length && buf!="";keyIndex++){
+							if(ConstHolder.keywords[keyIndex].equals(buf)){
+								isKeyword = true;
+								word = new Token(buf,ConstHolder.ketwordsTK[keyIndex],curLine,curCharLine);
+							}
+						}
+						if(isKeyword){
+							word = new Token(buf,TokenType.TK_ID, curLine, curCharLine);
+						}
+					separator = new Token(""+ch, ConstHolder.separatorsTK[sepIndex], curLine, curCharLine);
+					}
+					if(word!=null) tokens.add(word);
+					if(separator!=null) tokens.add(separator);
 				}
-//				case ' ': {
-//
-//					break;
-//				}
-				
-			}
+				buf+=ch;
 	}
 	}
 }
