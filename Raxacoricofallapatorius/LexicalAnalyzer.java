@@ -1,5 +1,4 @@
 import java.util.ArrayList;
-import java.util.Iterator;
 
 public class LexicalAnalyzer {
 	public int curLine = 1;
@@ -37,28 +36,43 @@ public class LexicalAnalyzer {
 			char ch;
 			String buf = ""; 
 			for(int curCh =0;curCh<code.length();curCh++) {
-				curCharLine++;
 				ch = code.charAt(curCh);
+				boolean boolSep = false;
 				for(int sepIndex=0;sepIndex<ConstHolder.separators.length;sepIndex++){
 					Token word = null;
 					Token separator = null;
 					if(ConstHolder.separators[sepIndex].charAt(0)==ch){
+						boolSep = true;
 						boolean isKeyword = false;
 						for(int keyIndex=0;keyIndex<ConstHolder.keywords.length && buf!="";keyIndex++){
-							if(ConstHolder.keywords[keyIndex].equals(buf)){
+							if(ConstHolder.keywords[keyIndex].equalsIgnoreCase(buf)){
 								isKeyword = true;
-								word = new Token(buf,ConstHolder.ketwordsTK[keyIndex],curLine,curCharLine);
+								word = new Token(buf,ConstHolder.ketwordsTK[keyIndex],curLine,curCharLine-buf.length());
 							}
 						}
-						if(isKeyword){
-							word = new Token(buf,TokenType.TK_ID, curLine, curCharLine);
+						if(!isKeyword){
+							word = new Token(buf,TokenType.TK_ID, curLine, curCharLine-buf.length());
 						}
-					separator = new Token(""+ch, ConstHolder.separatorsTK[sepIndex], curLine, curCharLine);
+					separator = new Token((ch=='\n'?"NL":" "+ch), ConstHolder.separatorsTK[sepIndex], curLine, curCharLine);
+					switch (ch) {
+					case '\n':
+						curLine++;
+						curCharLine = 0;
+						break;
+
+						default:
+							break;
+						}
 					}
-					if(word!=null) tokens.add(word);
-					if(separator!=null) tokens.add(separator);
+					if(word!=null && separator!=null){
+						tokens.add(word);
+						tokens.add(separator);
+						buf = "";
+						break;
+					}
 				}
-				buf+=ch;
+				if(!boolSep)buf+=ch;
+				curCharLine++;
 	}
 	}
 }
