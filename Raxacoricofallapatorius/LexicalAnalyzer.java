@@ -55,14 +55,15 @@ public class LexicalAnalyzer {
 						}
 					separator = new Token((ch=='\n'?"NL":" "+ch), ConstHolder.separatorsTK[sepIndex], curLine, curCharLine);
 					switch (ch) {
-					case '\n':
+					case '\n': {
 						curLine++;
 						curCharLine = 0;
 						break;
+					}
 
-						default:
-							break;
-						}
+					default:
+						break;
+					}
 					}
 					if(word!=null && separator!=null){
 						tokens.add(word);
@@ -71,7 +72,8 @@ public class LexicalAnalyzer {
 						break;
 					}
 				}
-				if(!boolSep)buf.append(ch);
+				if(!boolSep)
+					buf.append(ch);
 				curCharLine++;
 	}
 	}
