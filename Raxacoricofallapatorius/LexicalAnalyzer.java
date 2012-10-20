@@ -34,7 +34,7 @@ public class LexicalAnalyzer {
 			// wierdo buffer. Cosmic power told me that I need it
 			// Just need it, like ice-cream of fish fingers with custard
 			char ch;
-			String buf = ""; 
+			StringBuilder buf = new StringBuilder(); 
 			for(int curCh =0;curCh<code.length();curCh++) {
 				ch = code.charAt(curCh);
 				boolean boolSep = false;
@@ -44,14 +44,14 @@ public class LexicalAnalyzer {
 					if(ConstHolder.separators[sepIndex].charAt(0)==ch){
 						boolSep = true;
 						boolean isKeyword = false;
-						for(int keyIndex=0;keyIndex<ConstHolder.keywords.length && buf!="";keyIndex++){
-							if(ConstHolder.keywords[keyIndex].equalsIgnoreCase(buf)){
+						for(int keyIndex=0;keyIndex<ConstHolder.keywords.length && !buf.toString.isEmpty;keyIndex++){
+							if(ConstHolder.keywords[keyIndex].equalsIgnoreCase(buf.toString())){
 								isKeyword = true;
-								word = new Token(buf,ConstHolder.ketwordsTK[keyIndex],curLine,curCharLine-buf.length());
+								word = new Token(buf.toString(),ConstHolder.ketwordsTK[keyIndex],curLine,curCharLine-buf.length());
 							}
 						}
 						if(!isKeyword){
-							word = new Token(buf,TokenType.TK_ID, curLine, curCharLine-buf.length());
+							word = new Token(buf.toString(),TokenType.TK_ID, curLine, curCharLine-buf.length());
 						}
 					separator = new Token((ch=='\n'?"NL":" "+ch), ConstHolder.separatorsTK[sepIndex], curLine, curCharLine);
 					switch (ch) {
@@ -67,11 +67,11 @@ public class LexicalAnalyzer {
 					if(word!=null && separator!=null){
 						tokens.add(word);
 						tokens.add(separator);
-						buf = "";
+						buf = new StringBuilder();
 						break;
 					}
 				}
-				if(!boolSep)buf+=ch;
+				if(!boolSep)buf.append(ch);
 				curCharLine++;
 	}
 	}
