@@ -1,8 +1,8 @@
 import java.util.ArrayList;
 
 public class LexicalAnalyzer {
-	public int curLine = 1;
-	public int curCharLine = 0;
+	public int currentLine = 1;
+	public int currentCharLine = 0;
 	private ArrayList<Token> tokens = new ArrayList<Token>();
 	private String code = null;
 	/**
@@ -33,31 +33,32 @@ public class LexicalAnalyzer {
 			// rocket launcher ^^
 			// wierdo buffer. Cosmic power told me that I need it
 			// Just need it, like ice-cream of fish fingers with custard
-			char ch;
+		
+			char currentChar;
 			String buf = ""; 
-			for(int curCh =0;curCh<code.length();curCh++) {
-				ch = code.charAt(curCh);
+			for(int ch =0;ch<code.length();ch++) {
+				currentChar = code.charAt(ch);
 				boolean boolSep = false;
 				for(int sepIndex=0;sepIndex<ConstHolder.separators.length;sepIndex++){
 					Token word = null;
 					Token separator = null;
-					if(ConstHolder.separators[sepIndex].charAt(0)==ch){
+					if(ConstHolder.separators[sepIndex].charAt(0)==currentChar){
 						boolSep = true;
 						boolean isKeyword = false;
 						for(int keyIndex=0;keyIndex<ConstHolder.keywords.length && buf!="";keyIndex++){
 							if(ConstHolder.keywords[keyIndex].equalsIgnoreCase(buf)){
 								isKeyword = true;
-								word = new Token(buf,ConstHolder.ketwordsTK[keyIndex],curLine,curCharLine-buf.length());
+								word = new Token(buf,ConstHolder.ketwordsTK[keyIndex],currentLine,currentCharLine-buf.length());
 							}
 						}
 						if(!isKeyword){
-							word = new Token(buf,TokenType.TK_ID, curLine, curCharLine-buf.length());
+							word = new Token(buf,TokenType.TK_ID, currentLine, currentCharLine-buf.length());
 						}
-					separator = new Token((ch=='\n'?"NL":" "+ch), ConstHolder.separatorsTK[sepIndex], curLine, curCharLine);
-					switch (ch) {
+					separator = new Token((currentChar=='\n'?"NL":" "+currentChar), ConstHolder.separatorsTK[sepIndex], currentLine, currentCharLine);
+					switch (currentChar) {
 					case '\n':
-						curLine++;
-						curCharLine = 0;
+						currentLine++;
+						currentCharLine = 0;
 						break;
 
 						default:
@@ -71,9 +72,35 @@ public class LexicalAnalyzer {
 						break;
 					}
 				}
-				if(!boolSep)buf+=ch;
-				curCharLine++;
+				if(!boolSep)buf+=currentChar;
+				currentCharLine++;
+			}
 	}
+	/**
+	 * Method to read all text from quote to quote.
+	 */
+	public ArrayList<String> quoteRead(){
+		
+		char currentChar;
+		String buf = "";
+		ArrayList<String> text = new ArrayList<String>();
+		boolean checkOnQuote = false;
+		
+		for(int ch = 0; ch<code.length(); ch++){
+			currentChar = code.charAt(ch);
+			
+			if ((currentChar == '\"')&&(!checkOnQuote)){
+				checkOnQuote = true;
+				continue;
+			}else if ((checkOnQuote)&&(currentChar == '\"')){
+				checkOnQuote = false;
+				text.add(buf);
+				buf = "";
+			}else if (checkOnQuote){
+				buf+=currentChar;
+			}
+		}
+		return text;
 	}
 }
 

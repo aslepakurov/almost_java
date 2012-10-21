@@ -9,5 +9,13 @@ public class TestClass {
 		for(Token token: tokenlist){
 			System.out.println(token.toString());
 		}
+			
+//		Read from quote to quote:
+		la = new LexicalAnalyzer("\"123 if\" \"true_\"\"breakdown\" make total insane void");
+		
+		ArrayList<String> rslt = la.quoteRead();
+		for(int i = 0; i<rslt.size(); i++){
+			System.out.println(rslt.get(i));
+		}
 	}
 }
