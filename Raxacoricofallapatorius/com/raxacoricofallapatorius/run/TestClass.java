@@ -1,6 +1,8 @@
+package com.raxacoricofallapatorius.run;
 import java.util.ArrayList;
 
-
+import com.raxacoricofallapatorius.analyzer.LexicalAnalyzer;
+import com.raxacoricofallapatorius.service.Token;
 public class TestClass {
 	public static void main(String[] args) {
 		LexicalAnalyzer la = new LexicalAnalyzer("p for drew while serega true vlad\nawesome(var{break else paper if somethin}mouse/int 4 float 4.5 str \"sss\" pampam)");

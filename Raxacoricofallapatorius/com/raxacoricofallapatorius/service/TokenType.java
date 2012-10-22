@@ -1,3 +1,4 @@
+package com.raxacoricofallapatorius.service;
 public enum TokenType {
 	TK_ID,
 	TK_STRING,

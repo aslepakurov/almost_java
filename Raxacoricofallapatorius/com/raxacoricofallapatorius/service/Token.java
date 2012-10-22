@@ -1,3 +1,4 @@
+package com.raxacoricofallapatorius.service;
 public class Token {
 	private String name;
 	private TokenType type;

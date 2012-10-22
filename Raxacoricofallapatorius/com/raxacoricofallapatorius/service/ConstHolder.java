@@ -1,3 +1,4 @@
+package com.raxacoricofallapatorius.service;
 public class ConstHolder {
 	public static final String separators[] = { "\"", "(", ")", " ", "\n", "{",
 			"}","||","&&","!","*","/","+","-"};

@@ -1,4 +1,9 @@
+package com.raxacoricofallapatorius.analyzer;
 import java.util.ArrayList;
+
+import com.raxacoricofallapatorius.service.ConstHolder;
+import com.raxacoricofallapatorius.service.Token;
+import com.raxacoricofallapatorius.service.TokenType;
 
 public class LexicalAnalyzer {
 	public int currentLine = 1;
