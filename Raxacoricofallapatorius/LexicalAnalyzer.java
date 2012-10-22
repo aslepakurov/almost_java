@@ -33,11 +33,22 @@ public class LexicalAnalyzer {
 			// rocket launcher ^^
 			// wierdo buffer. Cosmic power told me that I need it
 			// Just need it, like ice-cream of fish fingers with custard
+<<<<<<< HEAD
 		
+
+
+
+
 			char currentChar;
-			String buf = ""; 
+			StringBuilder buf = new StringBuilder();
 			for(int ch =0;ch<code.length();ch++) {
 				currentChar = code.charAt(ch);
+
+
+
+
+
+
 				boolean boolSep = false;
 				for(int sepIndex=0;sepIndex<ConstHolder.separators.length;sepIndex++){
 					Token word = null;
@@ -45,9 +56,16 @@ public class LexicalAnalyzer {
 					if(ConstHolder.separators[sepIndex].charAt(0)==currentChar){
 						boolSep = true;
 						boolean isKeyword = false;
-						for(int keyIndex=0;keyIndex<ConstHolder.keywords.length && buf!="";keyIndex++){
-							if(ConstHolder.keywords[keyIndex].equalsIgnoreCase(buf)){
+						for(int keyIndex=0;keyIndex<ConstHolder.keywords.length && !buf.toString.isEmpty;keyIndex++){
+							if(ConstHolder.keywords[keyIndex].equalsIgnoreCase(buf.toString())){
 								isKeyword = true;
+<<<<<<< HEAD
+
+
+
+
+
+
 								word = new Token(buf,ConstHolder.ketwordsTK[keyIndex],currentLine,currentCharLine-buf.length());
 							}
 						}
@@ -60,20 +78,22 @@ public class LexicalAnalyzer {
 						currentLine++;
 						currentCharLine = 0;
 						break;
+					}
 
-						default:
-							break;
+					default:
+						break;
 						}
 					}
 					if(word!=null && separator!=null){
 						tokens.add(word);
 						tokens.add(separator);
-						buf = "";
+						buf = new StringBuilder();
 						break;
 					}
 				}
 				if(!boolSep)buf+=currentChar;
 				currentCharLine++;
+				buf.append(ch);
 			}
 	}
 	/**
