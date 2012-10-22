@@ -33,22 +33,10 @@ public class LexicalAnalyzer {
 			// rocket launcher ^^
 			// wierdo buffer. Cosmic power told me that I need it
 			// Just need it, like ice-cream of fish fingers with custard
-<<<<<<< HEAD
-		
-
-
-
-
 			char currentChar;
 			StringBuilder buf = new StringBuilder();
 			for(int ch =0;ch<code.length();ch++) {
 				currentChar = code.charAt(ch);
-
-
-
-
-
-
 				boolean boolSep = false;
 				for(int sepIndex=0;sepIndex<ConstHolder.separators.length;sepIndex++){
 					Token word = null;
@@ -59,13 +47,6 @@ public class LexicalAnalyzer {
 						for(int keyIndex=0;keyIndex<ConstHolder.keywords.length && !buf.toString.isEmpty;keyIndex++){
 							if(ConstHolder.keywords[keyIndex].equalsIgnoreCase(buf.toString())){
 								isKeyword = true;
-<<<<<<< HEAD
-
-
-
-
-
-
 								word = new Token(buf,ConstHolder.ketwordsTK[keyIndex],currentLine,currentCharLine-buf.length());
 							}
 						}
