@@ -44,14 +44,14 @@ public class LexicalAnalyzer {
 					if(ConstHolder.separators[sepIndex].charAt(0)==currentChar){
 						boolSep = true;
 						boolean isKeyword = false;
-						for(int keyIndex=0;keyIndex<ConstHolder.keywords.length && !buf.toString.isEmpty;keyIndex++){
+						for(int keyIndex=0;keyIndex<ConstHolder.keywords.length && !buf.toString().isEmpty();keyIndex++){
 							if(ConstHolder.keywords[keyIndex].equalsIgnoreCase(buf.toString())){
 								isKeyword = true;
-								word = new Token(buf,ConstHolder.ketwordsTK[keyIndex],currentLine,currentCharLine-buf.length());
+								word = new Token(buf.toString(),ConstHolder.ketwordsTK[keyIndex],currentLine,currentCharLine-buf.length());
 							}
 						}
 						if(!isKeyword){
-							word = new Token(buf,TokenType.TK_ID, currentLine, currentCharLine-buf.length());
+							word = new Token(buf.toString(),TokenType.TK_ID, currentLine, currentCharLine-buf.length());
 						}
 					separator = new Token((currentChar=='\n'?"NL":" "+currentChar), ConstHolder.separatorsTK[sepIndex], currentLine, currentCharLine);
 					switch (currentChar) {
@@ -60,10 +60,6 @@ public class LexicalAnalyzer {
 						currentCharLine = 0;
 						break;
 					}
-
-					default:
-						break;
-						}
 					}
 					if(word!=null && separator!=null){
 						tokens.add(word);
@@ -72,10 +68,10 @@ public class LexicalAnalyzer {
 						break;
 					}
 				}
-				if(!boolSep)buf+=currentChar;
+				if(!boolSep)buf.append(currentChar);
 				currentCharLine++;
-				buf.append(ch);
 			}
+		
 	}
 	/**
 	 * Method to read all text from quote to quote.
