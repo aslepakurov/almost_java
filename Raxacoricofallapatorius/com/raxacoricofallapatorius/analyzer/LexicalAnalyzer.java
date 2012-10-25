@@ -18,6 +18,7 @@ public class LexicalAnalyzer {
 	private String code = null;
 	private int lastLine = 0;
 	private int lastColumn = 0;
+	
 
 	/**
 	 * Consructor, kep :)
@@ -152,6 +153,27 @@ public class LexicalAnalyzer {
 					+ token.getLine() + ", column " + (token.getColumn() - 1));
 		lastLine = token.getLine();
 		lastColumn = token.getColumn();
+		boolean notAnInt = false;
+		boolean notAFloat = false;
+		if(token.getType() == TokenType.TK_ID){
+			float floatNum;
+			int intNum;
+			try {
+				floatNum = Float.parseFloat(token.getName());
+			} catch (NumberFormatException e) {
+				notAFloat = true;
+			}
+			try {
+				intNum = Integer.parseInt(token.getName());
+			} catch (NumberFormatException e) {
+				notAnInt = true;
+			}
+			if(notAnInt && !notAFloat){
+				token.setType(TokenType.TK_FLOAT);
+			}else if(!notAnInt){
+				token.setType(TokenType.TK_INT);
+			}
+		}
 		tokens.add(token);
 	}
 
