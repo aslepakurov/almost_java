@@ -23,6 +23,20 @@ public class Token {
 		return column;
 	}
 
+	
+	
+	public void setType(TokenType type) {
+		this.type = type;
+	}
+
+	public TokenType getType() {
+		return type;
+	}
+
+	public String getName() {
+		return name;
+	}
+
 	public String toString() {
 		return name + " " + type + " " + line + " " + column + " ";
 	}
