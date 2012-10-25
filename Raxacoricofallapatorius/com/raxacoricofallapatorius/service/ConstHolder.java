@@ -20,6 +20,8 @@ public class ConstHolder {
 		separatorsMap.put(TokenType.TK_S_RIGHT_PARENT, ")");
 		separatorsMap.put(TokenType.TK_S_WS, " ");
 		separatorsMap.put(TokenType.TK_S_CARRET, "\n");
+		separatorsMap.put(TokenType.TK_S_END, System.getProperty("line.separator").toString()); 		//is it actually working??
+//		separatorsMap.put(TokenType.TK_S_END, "\r");
 		separatorsMap.put(TokenType.TK_S_LEFT_BRACE, "{");
 		separatorsMap.put(TokenType.TK_S_RIGHT_BRACE, "}");
 		separatorsMap.put(TokenType.TK_S_FASTAND, "||");
