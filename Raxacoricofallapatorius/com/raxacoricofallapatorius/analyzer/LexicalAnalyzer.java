@@ -156,15 +156,14 @@ public class LexicalAnalyzer {
 		boolean notAnInt = false;
 		boolean notAFloat = false;
 		if(token.getType() == TokenType.TK_ID){
-			float floatNum;
-			int intNum;
+
 			try {
-				floatNum = Float.parseFloat(token.getName());
+				float floatNum = Float.parseFloat(token.getName());
 			} catch (NumberFormatException e) {
 				notAFloat = true;
 			}
 			try {
-				intNum = Integer.parseInt(token.getName());
+				int intNum = Integer.parseInt(token.getName());
 			} catch (NumberFormatException e) {
 				notAnInt = true;
 			}
