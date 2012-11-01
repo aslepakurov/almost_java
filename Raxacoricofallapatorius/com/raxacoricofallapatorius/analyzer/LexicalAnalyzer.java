@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import com.raxacoricofallapatorius.service.LexerException;
 import com.raxacoricofallapatorius.service.Token;
 import com.raxacoricofallapatorius.service.TokenType;
+import com.sun.xml.internal.ws.api.streaming.XMLStreamReaderFactory.Default;
 
 public class LexicalAnalyzer {
 	public int curLine = 1;
@@ -36,18 +37,7 @@ public class LexicalAnalyzer {
 		return tokens;
 	}
 
-	/**
-	 * method for parsing source code
-	 * 
-	 * i think this method must be in separated thread
-	 */
 	// public void parse() throws ParseException {
-	// // if file is in directory - use file. This is an pre-pre-pre-pre
-	// // ... -pre alpha moment, that will be replaced by some serious
-	// // stuff, like cyborgs, or sharks with AK-47's or a dino with a
-	// // rocket launcher ^^
-	// // wierdo buffer. Cosmic power told me that I need it
-	// // Just need it, like ice-cream of fish fingers with custard
 	// char ch;
 	// StringBuilder buf = new StringBuilder();
 	// boolean checkOnQuote = false;
@@ -195,9 +185,6 @@ public class LexicalAnalyzer {
 
 				// ------tokenized separators--------
 
-			case '"':
-				// add quoteRead from up above
-
 			case '(':
 				return new Token(TokenType.TK_S_LEFT_PARENT.toString(),
 						TokenType.TK_S_LEFT_PARENT, curLine, curCharLine);
@@ -232,28 +219,28 @@ public class LexicalAnalyzer {
 				// -------Ch x 2-----------
 
 			case '!':
-				if (curCh + 1 == '=')
+				if (code.charAt(curCh+1) == '=')
 					return new Token(TokenType.TK_S_NOT.toString(),
 							TokenType.TK_S_NOT, curLine, curCharLine);
 				else
 					new LexerException("= expected on line: " + curLine
 							+ " row: " + (curCharLine + 1));
 			case '=':
-				if (curCh + 1 == '=')
+				if (code.charAt(curCh+1) == '=')
 					return new Token(TokenType.TK_S_EQUAL.toString(),
 							TokenType.TK_S_EQUAL, curLine, curCharLine);
 				else
 					new LexerException("= expected on line: " + curLine
 							+ " row: " + (curCharLine + 1));
 			case '<':
-				if (curCh + 1 == '=')
+				if (code.charAt(curCh+1) == '=')
 					return new Token(TokenType.TK_S_EQUAL_OR_LESS.toString(),
 							TokenType.TK_S_EQUAL_OR_LESS, curLine, curCharLine);
 				else
 					return new Token(TokenType.TK_S_LESS.toString(),
 							TokenType.TK_S_LESS, curLine, curCharLine);
 			case '>':
-				if (curCh + 1 == '=')
+				if (code.charAt(curCh+1) == '=')
 					return new Token(
 							TokenType.TK_S_EQUAL_OR_GREATER.toString(),
 							TokenType.TK_S_EQUAL_OR_GREATER, curLine,
@@ -272,14 +259,24 @@ public class LexicalAnalyzer {
 			case 7:
 			case 8:
 			case 9:
-				if ((curCh + 1) < '0' && (curCh + 1) > '9' && (curCh != '.')) {
+				if ((code.charAt(curCh+1)) < '0' && (code.charAt(curCh+1)) > '9' && (code.charAt(curCh+1) != '.')) {
 					if(buf.toString().contains(".")) return new Token(buf.toString(), TokenType.TK_FLOAT, curLine, curCharLine);
 					else return new Token(buf.toString(), TokenType.TK_INT, curLine, curCharLine);
 				}else{
 					buf.append(curCh);
 				}
-			}
-
+				
+			//---------Dealing with strings--------
+				
+				
+			case '\"':
+				//Vlad it's your time
+			default:
+				buf.append(curCh);
+				if((code.charAt(curCh+1)<'A')&&(code.charAt(curCh+1)>'z')&&((code.charAt(curCh+1)>'Z')&(code.charAt(curCh+1)<95))||(code.charAt(curCh+1)!='$')){
+					
+				}
+			}	
 		}
 		return null;
 	}
