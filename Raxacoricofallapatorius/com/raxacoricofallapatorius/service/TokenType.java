@@ -20,7 +20,7 @@ public enum TokenType {
 	TK_K_WHILE,		//while
 	TK_K_IF,		//if
 	TK_K_ELSE,		//else
-	TK_K_CONT,		//continue
+	TK_K_CONTINUE,		//continue
 	TK_K_BREAK,		//break
 	TK_K_CONST,		//const
 	TK_K_DEF,		//def
