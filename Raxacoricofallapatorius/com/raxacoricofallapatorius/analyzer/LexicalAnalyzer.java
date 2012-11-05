@@ -27,11 +27,12 @@ public class LexicalAnalyzer {
 		this.code = code;
 	}
 
-	public Token lex() {
+	public Token lex() throws LexerException {
 		boolean tokenRead = false;
 		StringBuilder buf = new StringBuilder();
-		//true or die ????  cause never changed
-		
+		// true or die ???? cause never changed
+		// true =)
+
 		for (; tokenRead; curCh++, curCharLine++) {
 			if (curCh > code_size)
 				return null;
@@ -83,28 +84,28 @@ public class LexicalAnalyzer {
 				// -------Ch x 2-----------
 
 			case '!':
-				if (code.charAt(curCh+1) == '=')
+				if (code.charAt(curCh + 1) == '=')
 					return new Token(TokenType.TK_S_NOT.toString(),
 							TokenType.TK_S_NOT, curLine, curCharLine);
 				else
-					new LexerException("= expected on line: " + curLine
+					throw new LexerException("= expected on line: " + curLine
 							+ " row: " + (curCharLine + 1));
 			case '=':
-				if (code.charAt(curCh+1) == '=')
+				if (code.charAt(curCh + 1) == '=')
 					return new Token(TokenType.TK_S_EQUAL.toString(),
 							TokenType.TK_S_EQUAL, curLine, curCharLine);
 				else
 					new LexerException("= expected on line: " + curLine
 							+ " row: " + (curCharLine + 1));
 			case '<':
-				if (code.charAt(curCh+1) == '=')
+				if (code.charAt(curCh + 1) == '=')
 					return new Token(TokenType.TK_S_EQUAL_OR_LESS.toString(),
 							TokenType.TK_S_EQUAL_OR_LESS, curLine, curCharLine);
 				else
 					return new Token(TokenType.TK_S_LESS.toString(),
 							TokenType.TK_S_LESS, curLine, curCharLine);
 			case '>':
-				if (code.charAt(curCh+1) == '=')
+				if (code.charAt(curCh + 1) == '=')
 					return new Token(
 							TokenType.TK_S_EQUAL_OR_GREATER.toString(),
 							TokenType.TK_S_EQUAL_OR_GREATER, curLine,
@@ -123,42 +124,86 @@ public class LexicalAnalyzer {
 			case 7:
 			case 8:
 			case 9:
-				if ((code.charAt(curCh+1)) < '0' && (code.charAt(curCh+1)) > '9' && (code.charAt(curCh+1) != '.')) {
-					if(buf.toString().contains(".")) return new Token(buf.toString(), TokenType.TK_FLOAT, curLine, curCharLine);
-					else return new Token(buf.toString(), TokenType.TK_INT, curLine, curCharLine);
-				}else{
+				if ((code.charAt(curCh + 1)) < '0'
+						&& (code.charAt(curCh + 1)) > '9'
+						&& (code.charAt(curCh + 1) != '.')) {
+					if (buf.toString().contains("."))
+						return new Token(buf.toString(), TokenType.TK_FLOAT,
+								curLine, curCharLine);
+					else
+						return new Token(buf.toString(), TokenType.TK_INT,
+								curLine, curCharLine);
+				} else {
 					buf.append(curCh);
 				}
-				
-			//---------Dealing with strings--------
-				
-				
+
+				// ---------Dealing with strings--------
+
 			case '\"':
-				//Vlad it's your time
+				// Vlad it's your time
 			default:
 				buf.append(curCh);
-				if((code.charAt(curCh+1)<'A')&&(code.charAt(curCh+1)>'z')&&((code.charAt(curCh+1)>'Z')&(code.charAt(curCh+1)<95))||(code.charAt(curCh+1)!='$')){
-					if(buf.toString().equalsIgnoreCase("int")) return new Token(buf.toString(),TokenType.TK_K_INT,curLine,curCharLine);
-					if(buf.toString().equalsIgnoreCase("float")) return new Token(buf.toString(),TokenType.TK_K_FLOAT,curLine,curCharLine);
-					if(buf.toString().equalsIgnoreCase("str")) return new Token(buf.toString(),TokenType.TK_K_STR,curLine,curCharLine);
-					if(buf.toString().equalsIgnoreCase("void")) return new Token(buf.toString(),TokenType.TK_K_VOID,curLine,curCharLine);
-					if(buf.toString().equalsIgnoreCase("bool")) return new Token(buf.toString(),TokenType.TK_K_BOOL,curLine,curCharLine);
-					if(buf.toString().equalsIgnoreCase("true")) return new Token(buf.toString(),TokenType.TK_K_TRUE,curLine,curCharLine);
-					if(buf.toString().equalsIgnoreCase("false")) return new Token(buf.toString(),TokenType.TK_K_FALSE,curLine,curCharLine);
-					if(buf.toString().equalsIgnoreCase("func")) return new Token(buf.toString(),TokenType.TK_K_FUNC,curLine,curCharLine);
-					if(buf.toString().equalsIgnoreCase("for")) return new Token(buf.toString(),TokenType.TK_K_FOR,curLine,curCharLine);
-					if(buf.toString().equalsIgnoreCase("while")) return new Token(buf.toString(),TokenType.TK_K_WHILE,curLine,curCharLine);
-					if(buf.toString().equalsIgnoreCase("if")) return new Token(buf.toString(),TokenType.TK_K_IF,curLine,curCharLine);
-					if(buf.toString().equalsIgnoreCase("else")) return new Token(buf.toString(),TokenType.TK_K_ELSE,curLine,curCharLine);
-					if(buf.toString().equalsIgnoreCase("continue")) return new Token(buf.toString(),TokenType.TK_K_CONTINUE,curLine,curCharLine);
-					if(buf.toString().equalsIgnoreCase("break")) return new Token(buf.toString(),TokenType.TK_K_BREAK,curLine,curCharLine);
-					if(buf.toString().equalsIgnoreCase("const")) return new Token(buf.toString(),TokenType.TK_K_CONST,curLine,curCharLine);
-					if(buf.toString().equalsIgnoreCase("def")) return new Token(buf.toString(),TokenType.TK_K_DEF,curLine,curCharLine);
-					if(buf.toString().equalsIgnoreCase("div")) return new Token(buf.toString(),TokenType.TK_K_DIV,curLine,curCharLine);
-					//do we need more keywords????
-					return new Token(buf.toString(),TokenType.TK_ID,curLine,curCharLine);
+				if ((code.charAt(curCh + 1) < 'A')
+						&& (code.charAt(curCh + 1) > 'z')
+						&& ((code.charAt(curCh + 1) > 'Z') & (code
+								.charAt(curCh + 1) < 95))
+						|| (code.charAt(curCh + 1) != '$')) {
+					if (buf.toString().equalsIgnoreCase("int"))
+						return new Token(buf.toString(), TokenType.TK_K_INT,
+								curLine, curCharLine);
+					if (buf.toString().equalsIgnoreCase("float"))
+						return new Token(buf.toString(), TokenType.TK_K_FLOAT,
+								curLine, curCharLine);
+					if (buf.toString().equalsIgnoreCase("str"))
+						return new Token(buf.toString(), TokenType.TK_K_STR,
+								curLine, curCharLine);
+					if (buf.toString().equalsIgnoreCase("void"))
+						return new Token(buf.toString(), TokenType.TK_K_VOID,
+								curLine, curCharLine);
+					if (buf.toString().equalsIgnoreCase("bool"))
+						return new Token(buf.toString(), TokenType.TK_K_BOOL,
+								curLine, curCharLine);
+					if (buf.toString().equalsIgnoreCase("true"))
+						return new Token(buf.toString(), TokenType.TK_K_TRUE,
+								curLine, curCharLine);
+					if (buf.toString().equalsIgnoreCase("false"))
+						return new Token(buf.toString(), TokenType.TK_K_FALSE,
+								curLine, curCharLine);
+					if (buf.toString().equalsIgnoreCase("func"))
+						return new Token(buf.toString(), TokenType.TK_K_FUNC,
+								curLine, curCharLine);
+					if (buf.toString().equalsIgnoreCase("for"))
+						return new Token(buf.toString(), TokenType.TK_K_FOR,
+								curLine, curCharLine);
+					if (buf.toString().equalsIgnoreCase("while"))
+						return new Token(buf.toString(), TokenType.TK_K_WHILE,
+								curLine, curCharLine);
+					if (buf.toString().equalsIgnoreCase("if"))
+						return new Token(buf.toString(), TokenType.TK_K_IF,
+								curLine, curCharLine);
+					if (buf.toString().equalsIgnoreCase("else"))
+						return new Token(buf.toString(), TokenType.TK_K_ELSE,
+								curLine, curCharLine);
+					if (buf.toString().equalsIgnoreCase("continue"))
+						return new Token(buf.toString(),
+								TokenType.TK_K_CONTINUE, curLine, curCharLine);
+					if (buf.toString().equalsIgnoreCase("break"))
+						return new Token(buf.toString(), TokenType.TK_K_BREAK,
+								curLine, curCharLine);
+					if (buf.toString().equalsIgnoreCase("const"))
+						return new Token(buf.toString(), TokenType.TK_K_CONST,
+								curLine, curCharLine);
+					if (buf.toString().equalsIgnoreCase("def"))
+						return new Token(buf.toString(), TokenType.TK_K_DEF,
+								curLine, curCharLine);
+					if (buf.toString().equalsIgnoreCase("div"))
+						return new Token(buf.toString(), TokenType.TK_K_DIV,
+								curLine, curCharLine);
+					// do we need more keywords????
+					return new Token(buf.toString(), TokenType.TK_ID, curLine,
+							curCharLine);
 				}
-			}	
+			}
 		}
 		return null;
 	}
@@ -169,9 +214,13 @@ public class LexicalAnalyzer {
 	public void run_lex() {
 		Token token = null;
 		do {
-			token = lex();
-			if (token != null)
-				tokens.add(token);
+			try {
+				token = lex();
+				if (token != null)
+					tokens.add(token);
+			} catch (LexerException e) {
+				System.out.println("Error : " + e);
+			}
 		} while (token != null);
 	}
 }
