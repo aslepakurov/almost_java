@@ -4,6 +4,7 @@ package com.raxacoricofallapatorius.run;
 import com.raxacoricofallapatorius.analyzer.LexicalAnalyzer;
 import com.raxacoricofallapatorius.service.LexerException;
 import com.raxacoricofallapatorius.service.Token;
+import com.raxacoricofallapatorius.service.TokenType;
 
 //package com.raxacoricofallapatorius.run;
 //
@@ -15,18 +16,14 @@ import com.raxacoricofallapatorius.service.Token;
 //
 public class TestClass {
 	public static void main(String[] args) {
-		LexicalAnalyzer l = new LexicalAnalyzer("{} 12.");
+		LexicalAnalyzer l = new LexicalAnalyzer(
+				"qwer$qwe >$12v int float void xDD");
 		Token token = null;
 		try {
 			do {
-				// try {
 				token = l.lex();
 				System.out.println("token = " + token);
-				// } catch (LexerException e) {
-
-				// break;
-				// }
-			} while (token != null);
+			} while (token.getType() != TokenType.TK_EOP);
 		} catch (LexerException e) {
 			System.out.println("Error : " + e);
 		}
