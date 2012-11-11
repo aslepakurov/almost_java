@@ -238,7 +238,15 @@ public enum TokenType {
 			return "<=";
 		}
 	} // <=
-	;
+	,
+	TK_EOP { // end of program token
+
+		@Override
+		public String getName() {
+			return "";
+		}
+
+	};
 
 	abstract public String getName();
 }
