@@ -3,6 +3,7 @@ package com.raxacoricofallapatorius.analyzer;
 import com.raxacoricofallapatorius.service.LexerException;
 import com.raxacoricofallapatorius.service.Token;
 import com.raxacoricofallapatorius.service.TokenType;
+import com.raxacoricofallapatorius.service.ConstHolder;
 
 public class LexicalAnalyzer {
 	public int curLine = 1;
@@ -159,8 +160,6 @@ public class LexicalAnalyzer {
 				// return text;
 				// }
 
-				// def temporry anavailable
-
 			case '$': {
 				buf.append(curCh);
 				for (int tmpPos = curPos + 1; tmpPos < code.length(); tmpPos++) {
@@ -179,73 +178,29 @@ public class LexicalAnalyzer {
 				return new Token(buf.toString(), TokenType.TK_ID, curLine,
 						curCharLine);
 			}
-			//
-			// default:
-			// buf.append(curCh);
-			// if ((code.charAt(curCh + 1) < 'A')
-			// && (code.charAt(curCh + 1) > 'z')
-			// && ((code.charAt(curCh + 1) > 'Z') & (code
-			// .charAt(curCh + 1) < 95))
-			// || (code.charAt(curCh + 1) != '$')) {
-			// if (buf.toString().equalsIgnoreCase("int"))
-			// return new Token(TokenType.TK_K_INT.getName(),
-			// TokenType.TK_K_INT, curLine, curCharLine);
-			// if (buf.toString().equalsIgnoreCase("float"))
-			// return new Token(TokenType.TK_K_FLOAT.getName(),
-			// TokenType.TK_K_FLOAT, curLine, curCharLine);
-			// if (buf.toString().equalsIgnoreCase("str"))
-			// return new Token(TokenType.TK_K_STR.getName(),
-			// TokenType.TK_K_STR, curLine, curCharLine);
-			// if (buf.toString().equalsIgnoreCase("void"))
-			// return new Token(TokenType.TK_K_VOID.getName(),
-			// TokenType.TK_K_VOID, curLine, curCharLine);
-			// if (buf.toString().equalsIgnoreCase("bool"))
-			// return new Token(TokenType.TK_K_BOOL.getName(),
-			// TokenType.TK_K_BOOL, curLine, curCharLine);
-			// if (buf.toString().equalsIgnoreCase("true"))
-			// return new Token(TokenType.TK_K_TRUE.getName(),
-			// TokenType.TK_K_TRUE, curLine, curCharLine);
-			// if (buf.toString().equalsIgnoreCase("false"))
-			// return new Token(TokenType.TK_K_FALSE.getName(),
-			// TokenType.TK_K_FALSE, curLine, curCharLine);
-			// if (buf.toString().equalsIgnoreCase("func"))
-			// return new Token(TokenType.TK_K_FUNC.getName(),
-			// TokenType.TK_K_FUNC, curLine, curCharLine);
-			// if (buf.toString().equalsIgnoreCase("for"))
-			// return new Token(TokenType.TK_K_FOR.getName(),
-			// TokenType.TK_K_FOR, curLine, curCharLine);
-			// if (buf.toString().equalsIgnoreCase("while"))
-			// return new Token(TokenType.TK_K_WHILE.getName(),
-			// TokenType.TK_K_WHILE, curLine, curCharLine);
-			// if (buf.toString().equalsIgnoreCase("if"))
-			// return new Token(TokenType.TK_K_IF.getName(),
-			// TokenType.TK_K_IF, curLine, curCharLine);
-			// if (buf.toString().equalsIgnoreCase("else"))
-			// return new Token(TokenType.TK_K_ELSE.getName(),
-			// TokenType.TK_K_ELSE, curLine, curCharLine);
-			// if (buf.toString().equalsIgnoreCase("continue"))
-			// return new Token(TokenType.TK_K_CONTINUE.getName(),
-			// TokenType.TK_K_CONTINUE, curLine, curCharLine);
-			// if (buf.toString().equalsIgnoreCase("break"))
-			// return new Token(TokenType.TK_K_BREAK.getName(),
-			// TokenType.TK_K_BREAK, curLine, curCharLine);
-			// if (buf.toString().equalsIgnoreCase("const"))
-			// return new Token(TokenType.TK_K_CONST.getName(),
-			// TokenType.TK_K_CONST, curLine, curCharLine);
-			// if (buf.toString().equalsIgnoreCase("def"))
-			// return new Token(TokenType.TK_K_DEF.getName(),
-			// TokenType.TK_K_DEF, curLine, curCharLine);
-			// if (buf.toString().equalsIgnoreCase("div"))
-			// return new Token(TokenType.TK_K_DIV.getName(),
-			// TokenType.TK_K_DIV, curLine, curCharLine);
-			// // do we need more keywords????
-			// return new Token(buf.toString(), TokenType.TK_ID, curLine,
-			// curCharLine);
-			// }
+
+			default:
+				buf.append(curCh);
+				for (int tmpPos = curPos + 1; tmpPos < code.length(); tmpPos++) {
+					curCh = code.charAt(tmpPos);
+					if ((curCh >= 'a' && curCh <= 'z')
+							|| (curCh >= 'A' && curCh <= 'Z')
+							|| (curCh >= '0' && curCh <= '9')) {
+						buf.append(curCh);
+					} else
+						break;
+				}
+				TokenType tokenType = ConstHolder.keywordsMap.get(buf
+						.toString());
+				if (tokenType == null)
+					tokenType = TokenType.TK_ID;
+				return new Token(buf.toString(), tokenType, curLine,
+						curCharLine);
 			}
 
 		}
-		return null;
+		return new Token(TokenType.TK_EOP.getName(), TokenType.TK_EOP, curLine,
+				curCharLine);
 	}
 
 	public Token lex() throws LexerException {
@@ -255,7 +210,6 @@ public class LexicalAnalyzer {
 			curPos += result.getName().length();
 			curCharLine += result.getName().length();
 		}
-		System.out.println("newPos " + curPos);
 		return result;
 	}
 
