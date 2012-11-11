@@ -7,7 +7,7 @@ import com.raxacoricofallapatorius.service.ConstHolder;
 
 public class LexicalAnalyzer {
 	public int curLine = 1;
-	public int curCharLine = 0;
+	public int curCharLine = 1;
 	public int curPos = 0;
 	public char curCh = 0;
 	private String code = null;
@@ -139,48 +139,29 @@ public class LexicalAnalyzer {
 
 				// ---------Dealing with strings--------
 
-				// marked as comments because not fixed yet
-
-				// // for (int ch = 0; ch < code.length(); ch++) {
-				// currentChar = code.charAt(ch);
-				//
-				// if ((currentChar == '\"') && (!checkOnQuote)) {
-				// checkOnQuote = true;
-				// continue;
-				// } else if ((checkOnQuote) && (currentChar == '\"')) {
-				// checkOnQuote = false;
-				// text.add(new Token(buf.toString(), TokenType.TK_STRING,
-				// 0/* temporary_not_implemented */, 0/*
-				// temporary_not_implemented */));
-				// buf = new StringBuilder();
-				// } else if (checkOnQuote) {
-				// buf.append(currentChar);
-				// }
-				// }
-				// return text;
-				// }
-
-			case '$': {
-				buf.append(curCh);
+			case '\"': {
+				boolean endOfString = false;
 				for (int tmpPos = curPos + 1; tmpPos < code.length(); tmpPos++) {
 					curCh = code.charAt(tmpPos);
-					if ((curCh >= 'a' && curCh <= 'z')
-							|| (curCh >= 'A' && curCh <= 'Z')
-							|| (curCh >= '0' && curCh <= '9')) {
+					if (curCh != '\"')
 						buf.append(curCh);
-					} else
+					else {
+						endOfString = true;
 						break;
+					}
 				}
-				if (buf.length() == 1)
-					throw new LexerException(
-							"variable declaration expected at " + curLine
-									+ " row: " + (curCharLine + 1));
-				return new Token(buf.toString(), TokenType.TK_ID, curLine,
-						curCharLine);
+				if (!endOfString)
+					throw new LexerException("string quotes not closed at "
+							+ curLine + " row: " + (curPos + 1));
+				curPos += 2;
+				curCharLine++;
+				return new Token(buf.toString(), TokenType.TK_STRING, curLine,
+						curCharLine++);
 			}
 
 			default:
 				buf.append(curCh);
+				char firstChar = curCh;
 				for (int tmpPos = curPos + 1; tmpPos < code.length(); tmpPos++) {
 					curCh = code.charAt(tmpPos);
 					if ((curCh >= 'a' && curCh <= 'z')
@@ -190,12 +171,21 @@ public class LexicalAnalyzer {
 					} else
 						break;
 				}
-				TokenType tokenType = ConstHolder.keywordsMap.get(buf
-						.toString());
-				if (tokenType == null)
-					tokenType = TokenType.TK_ID;
-				return new Token(buf.toString(), tokenType, curLine,
-						curCharLine);
+				if (firstChar == '$') {
+					if (buf.length() == 1)
+						throw new LexerException(
+								"variable declaration expected at " + curLine
+										+ " row: " + (curCharLine + 1));
+					return new Token(buf.toString(), TokenType.TK_ID, curLine,
+							curCharLine);
+				} else {
+					TokenType tokenType = ConstHolder.keywordsMap.get(buf
+							.toString().toLowerCase());
+					if (tokenType == null)
+						tokenType = TokenType.TK_ID;
+					return new Token(buf.toString(), tokenType, curLine,
+							curCharLine);
+				}
 			}
 
 		}
@@ -206,10 +196,9 @@ public class LexicalAnalyzer {
 	public Token lex() throws LexerException {
 		Token result = lexProcessor();
 
-		if (result != null) {
-			curPos += result.getName().length();
-			curCharLine += result.getName().length();
-		}
+		curPos += result.getName().length();
+		curCharLine += result.getName().length();
+
 		return result;
 	}
 
