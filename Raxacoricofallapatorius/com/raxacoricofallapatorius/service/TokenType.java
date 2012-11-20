@@ -73,7 +73,7 @@ public enum TokenType {
 	TK_K_FUNC {
 		@Override
 		public String getName() {
-			return "funk";
+			return "func";
 		}
 	}, // func
 	TK_K_FOR {
@@ -237,8 +237,21 @@ public enum TokenType {
 		public String getName() {
 			return "<=";
 		}
-	} // <=
-	,
+	}, // <=
+	
+	TK_S_INIT{
+		@Override
+		public String getName() {
+			return "=";
+		}
+	}, //=
+	
+	TK_S_COMMA{
+		@Override
+		public String getName() {
+			return ",";
+		}
+	},//,
 	TK_EOP { // end of program token
 
 		@Override
