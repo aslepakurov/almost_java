@@ -34,7 +34,7 @@ public class LexicalAnalyzer {
 				curCharLine++;
 				continue;
 			case '\n':
-				curCharLine = 0;
+				curCharLine = 1;
 				curLine++;
 				continue;
 
@@ -70,7 +70,10 @@ public class LexicalAnalyzer {
 			case '-':
 				return new Token(TokenType.TK_S_SUBTRACT.getName(),
 						TokenType.TK_S_SUBTRACT, curLine, curCharLine);
-
+			case ',':
+				return new Token(TokenType.TK_S_COMMA.getName(),
+						TokenType.TK_S_COMMA, curLine, curCharLine);
+				
 				// -------Ch x 2-----------
 
 			case '!':
@@ -86,8 +89,8 @@ public class LexicalAnalyzer {
 					return new Token(TokenType.TK_S_EQUAL.getName(),
 							TokenType.TK_S_EQUAL, curLine, curCharLine);
 				} else
-					throw new LexerException("= expected on line: " + curLine
-							+ " row: " + (curCharLine + 1));
+					return new Token(TokenType.TK_S_INIT.getName(),
+							TokenType.TK_S_INIT,curLine,curCharLine);
 			case '<':
 				if (hasNextChar() && code.charAt(curPos + 1) == '=')
 					return new Token(TokenType.TK_S_EQUAL_OR_LESS.getName(),
