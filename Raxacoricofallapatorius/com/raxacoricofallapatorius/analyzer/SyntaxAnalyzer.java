@@ -2,8 +2,7 @@ package com.raxacoricofallapatorius.analyzer;
 
 import java.util.ArrayList;
 
-import sun.org.mozilla.javascript.Function;
-
+import com.raxacoricofallapatorius.service.Function;
 import com.raxacoricofallapatorius.service.SyntaxException;
 import com.raxacoricofallapatorius.service.Token;
 import com.raxacoricofallapatorius.service.TokenType;
