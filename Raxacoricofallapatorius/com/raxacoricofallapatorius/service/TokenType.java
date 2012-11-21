@@ -1,30 +1,10 @@
 package com.raxacoricofallapatorius.service;
 
 public enum TokenType {
-	TK_ID {
-		@Override
-		public String getName() {
-			return null;
-		}
-	}, // identifier token
-	TK_STRING {
-		@Override
-		public String getName() {
-			return null;
-		}
-	}, // string token
-	TK_INT {
-		@Override
-		public String getName() {
-			return null;
-		}
-	}, // int num token
-	TK_FLOAT {
-		@Override
-		public String getName() {
-			return null;
-		}
-	}, // float num token
+	TK_ID, // identifier token
+	TK_STRING, // string token
+	TK_INT, // int num token
+	TK_FLOAT, // float num token
 
 	// -------Keywords--------
 
@@ -238,20 +218,20 @@ public enum TokenType {
 			return "<=";
 		}
 	}, // <=
-	
-	TK_S_INIT{
+
+	TK_S_INIT {
 		@Override
 		public String getName() {
 			return "=";
 		}
-	}, //=
-	
-	TK_S_COMMA{
+	}, // =
+
+	TK_S_COMMA {
 		@Override
 		public String getName() {
 			return ",";
 		}
-	},//,
+	}, // ,
 	TK_EOP { // end of program token
 
 		@Override
@@ -261,5 +241,7 @@ public enum TokenType {
 
 	};
 
-	abstract public String getName();
+	public String getName() {
+		return null;
+	}
 }
