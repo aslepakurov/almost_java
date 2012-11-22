@@ -73,7 +73,10 @@ public class LexicalAnalyzer {
 			case ',':
 				return new Token(TokenType.TK_S_COMMA.getName(),
 						TokenType.TK_S_COMMA, curLine, curCharLine);
-				
+			case ';':
+				return new Token(TokenType.TK_S_SEMICOLON.getName(),
+						TokenType.TK_S_SEMICOLON, curLine, curCharLine);
+
 				// -------Ch x 2-----------
 
 			case '!':
@@ -90,7 +93,7 @@ public class LexicalAnalyzer {
 							TokenType.TK_S_EQUAL, curLine, curCharLine);
 				} else
 					return new Token(TokenType.TK_S_INIT.getName(),
-							TokenType.TK_S_INIT,curLine,curCharLine);
+							TokenType.TK_S_INIT, curLine, curCharLine);
 			case '<':
 				if (hasNextChar() && code.charAt(curPos + 1) == '=')
 					return new Token(TokenType.TK_S_EQUAL_OR_LESS.getName(),
