@@ -1,7 +1,6 @@
 package com.raxacoricofallapatorius.service;
 
-import java.util.ArrayList;
-import java.util.Arrays;
+import com.raxacoricofallapatorius.service.statements.Statement;
 
 /**
  * Function class
@@ -112,38 +111,11 @@ public class Function {
 	 * 
 	 * @param some
 	 *            object
-	 * @return true if functions has the same names and list of input parameters
-	 *         including ordering of types declaration are the same too, false
-	 *         otherwise
+	 * @return true if functions has the same names, false otherwise
 	 */
 	public boolean equals(Object other) {
 		if (other == null)
 			return false;
-		if (!(other instanceof Function))
-			return false;
-		Function otherFunction = (Function) other;
-		if (!otherFunction.getName().equalsIgnoreCase(name))
-			return false;
-		return matchInputTypes(inputVariablesTypes,
-				otherFunction.getInputVariablesTypes());
-	}
-
-	/**
-	 * additional method for equals
-	 * 
-	 * @param ofFunc1
-	 *            types of function1
-	 * @param ofFunc2
-	 *            types of function2
-	 * @return true if arrays are the same including ordering of elements. false
-	 *         otherwise
-	 */
-	private boolean matchInputTypes(TokenType[] ofFunc1, TokenType[] ofFunc2) {
-		if (ofFunc1.length != ofFunc2.length)
-			return false;
-		for (int i = 0; i < ofFunc1.length; i++)
-			if (ofFunc1[i] != ofFunc2[i])
-				return false;
-		return true;
+		return ((Function) other).getName().equalsIgnoreCase(name);
 	}
 }
