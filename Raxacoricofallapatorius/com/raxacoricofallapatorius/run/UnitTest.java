@@ -2,15 +2,22 @@ package com.raxacoricofallapatorius.run;
 
 import java.util.ArrayList;
 
+//import junit.framework.Assert;
+
+
+//import org.junit.After;
+//import org.junit.Before;
+//import org.junit.Test;
+
 import com.raxacoricofallapatorius.analyzer.LexicalAnalyzer;
 import com.raxacoricofallapatorius.service.LexerException;
 import com.raxacoricofallapatorius.service.Token;
 import com.raxacoricofallapatorius.service.TokenType;
-
 import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
+//public class UnitTest extends Assert {
 public class UnitTest extends TestCase {
 	private  ArrayList<Token> test;
 	private ArrayList<Token> expected;
@@ -22,8 +29,9 @@ public class UnitTest extends TestCase {
 		this.code = code;
 	}
 	@Override
+//	@Before
 	protected void setUp() throws Exception {
-		super.setUp();
+//		super.setUp();
 		la = new LexicalAnalyzer(code);
 		test = new ArrayList<Token>();
 		Token token;
@@ -37,38 +45,45 @@ public class UnitTest extends TestCase {
 			System.out.println("Error : " + e);
 		}
 	}
+//	@After
 	@Override
 	protected void tearDown() throws Exception {
-		super.tearDown();
+//		super.tearDown();
 		test = null;
 	}
+//	@Test
+
 	public void testInt(){
 //		System.out.println(expected);
 //		System.out.println(test);
 		assertTrue(Token.arrEquals(test, expected));
 	}
-	
+//O*&^(*&^#(*&^($*%)@#(%*_@)#*%_@%
+//	@Test
 	public void testDouble(){
 //		System.out.println(expected);
 //		System.out.println(test);
 		assertTrue(Token.arrEquals(test, expected));
 	}
+//	@Test
 	public void testString(){
 //		System.out.println(expected);
 //		System.out.println(test);
 		assertTrue(Token.arrEquals(test, expected));
 	}
-	
+//	@Test
 	public void testKeyword(){
 //		System.out.println(expected);
 //		System.out.println(test);
 		assertTrue(Token.arrEquals(test, expected));
 	}
+//	@Test
 	public void testSeparator(){
 //		System.out.println(expected);
 //		System.out.println(test);
 		assertTrue(Token.arrEquals(test, expected));
 	}
+//	@Test
 	public void testVenigret(){
 //		System.out.println(expected);
 //		System.out.println(test);
