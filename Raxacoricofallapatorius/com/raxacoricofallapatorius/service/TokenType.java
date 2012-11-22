@@ -65,7 +65,7 @@ public enum TokenType {
 	TK_K_WHILE {
 		@Override
 		public String getName() {
-			return "white";
+			return "while";
 		}
 	}, // while
 	TK_K_IF {
@@ -232,6 +232,12 @@ public enum TokenType {
 			return ",";
 		}
 	}, // ,
+	TK_S_SEMICOLON { // ;
+		@Override
+		public String getName() {
+			return ";";
+		}
+	},
 	TK_EOP { // end of program token
 
 		@Override
