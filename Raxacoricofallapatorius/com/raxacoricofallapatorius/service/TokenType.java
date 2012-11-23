@@ -56,6 +56,12 @@ public enum TokenType {
 			return "func";
 		}
 	}, // func
+	TK_K_CALL {
+		@Override
+		public String getName() {
+			return "call";
+		}
+	}, // call
 	TK_K_FOR {
 		@Override
 		public String getName() {
@@ -112,7 +118,12 @@ public enum TokenType {
 	}, // div
 
 	// --------Separators-----------
-
+	TK_S_MOD {
+		@Override
+		public String getName() {
+			return "%";
+		}
+	}, // %
 	TK_S_QUOT {
 		@Override
 		public String getName() {

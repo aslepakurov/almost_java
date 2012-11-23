@@ -70,6 +70,10 @@ public class LexicalAnalyzer {
 			case '-':
 				return new Token(TokenType.TK_S_SUBTRACT.getName(),
 						TokenType.TK_S_SUBTRACT, curLine, curCharLine);
+			case '%':
+				return new Token(TokenType.TK_S_MOD.getName(),
+						TokenType.TK_S_MOD, curLine, curCharLine);
+			
 			case ',':
 				return new Token(TokenType.TK_S_COMMA.getName(),
 						TokenType.TK_S_COMMA, curLine, curCharLine);

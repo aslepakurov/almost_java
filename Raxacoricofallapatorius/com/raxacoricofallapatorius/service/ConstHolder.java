@@ -36,6 +36,7 @@ public class ConstHolder {
 		keywordsMap.put(TokenType.TK_K_TRUE.getName(), TokenType.TK_K_TRUE);
 		keywordsMap.put(TokenType.TK_K_FALSE.getName(), TokenType.TK_K_FALSE);
 		keywordsMap.put(TokenType.TK_K_FUNC.getName(), TokenType.TK_K_FUNC);
+		keywordsMap.put(TokenType.TK_K_CALL.getName(), TokenType.TK_K_CALL);
 		keywordsMap.put(TokenType.TK_K_FOR.getName(), TokenType.TK_K_FOR);
 		keywordsMap.put(TokenType.TK_K_WHILE.getName(), TokenType.TK_K_WHILE);
 		keywordsMap.put(TokenType.TK_K_IF.getName(), TokenType.TK_K_IF);
