@@ -1,57 +1,71 @@
 ;--CODENAME: raxacoricofallapatorius--
+;--Program--
 
-;--Basic structures--
+<program>::=<function>*
 
-<program>::='PROGRAM' <identifier> <function>* 
-<block>::='{'<working_block>*'}'
-<working_block>::=<block>|<iwf_structures>|<statment>|<function call>
-<iwf_structures>::=<if_stmts>|<while_stmt>|<for_stmt>
-<function>::=<function_declaration>|<function_call>
-<function_declaration>::='function' '('<set_of_parametrs>'):'<type> <block>
-<function_call>::=<identifier>(<identifier>*)
-<if_stmts>::=<if_stmt>|<if_else_stmt>
-<if_stmt>::=if,'('<logical_statment>+') <block>
-<if_else_stmt>::=<if_stmt> 'else' <block>
-<while_stmt>::='while' '('<logical_statment>+')' <block>
-<for_stmt>::='for' '('<initialization>';'<logical_statment>+';'<statment>')' <block>
-<statment>::=<declaration>|<initialization>|<return>|<manipulation_statment>
+;--Basics--
 
-;--Basic manipulations--
+<NUMBER>::=\d+
+<IDENTIFIER>::=[a-zA-Z$][a-zA-Z0-9]
+<STRING>::='"'([\w]^")'"'
 
-<derclaration>::='def' <identifier>':',<type>
-<initialization> ::= declaration>|<identifier>':='<identifier>|<string>|<numeric>
-<manipulation_statment>::=<statment_math>|<statment_logic>
-<statment_math>::=<identifier>':='<identifier>|<numeric> <math_literal> <identifier>|<numeric>
-<statment_logic>::=<identifier>':='<identifier>|<numeric> <logic_literal> <identifier>|<numeric>
-<logical_expression>::=<identifier>|<numeric> <logic_literal> <identifier>|<numeric>
-<logical_statment>::=<logical_expression>|<boolean_literal>
-<return>::='return' <identifier>|<return_literal>
-<parametr>::=<identifier>':'<type>
-<set_of_parametr>::=<parametr>(','<parametr>)*
+;--Literal--
 
-;--Basic types--
+<int_literal>::=<NUMBER>
+<double_literal>::=<int_literal>'.'<NUMBER>
+<numeric_literals>::=<int_literal>|<double_literal>
+<bool_literal>::='true'|'false'
+<void_literals>::=;nothing xDD
+<literals>::=<int_literal>|<double_literal>|<bool_literal>|<STRING>
 
-<type> ::= int|bool|float|str|void|<type_array>
-<type_array> ::= int '[]' | float '[]'
-<type_sign_decimal>::=?<sign><decimal_literal>
-<type_sign_float>::=?<sign><floating_point_literal>
-<array_get>::=<identifier> '['<decimal_literal>']'
+;--Types--
+<boolean_type>::='bool'
+<string_type>::='str'
+<void_type>::='void'
+<numeric_types>::='int'|'double'
+<array_types>::<numeric_types>|<boolean_type>|<string_type>
+<var_types>::=<array_types>|<array_types>"[]"
+<return_types>::<var_types>|<void_type>
 
-;--Basic literals--
+;--Functions--
+<function_declaration>::='func' <return_types> <IDENTIFIER>'('<list_of_parametrs>')'<local_var_decl>?<comp_block>
+<list_of_parametrs><parametr>(','<parametr>)*
+<parametr>::=<var_types> <IDENTIFIER> 
+<local_var_decl>::=(<var_declaration>)*
+<function_call>::='call' <IDENTIFIER>'('<IDENTIFIER>(','<IDENTIFIER>)*')'
+<return>::='return' (<IDENTIFIER>|<expression>)? 
 
-<return_literal>::=<boolean_literal>|<sign_numeric_literal>|<string>
-<boolean_literal>::=true|false
-<math_literal>::=+|-|*|/|%|'div'
-<logical_literal>::='!'|'!='|'||'|'&&'|'<'|'>'|'>='|'<='
-<floating_point_literal>::=<digit>.<digit>
-<decimal_literal>::=<digit>+
-<sign_numeric_literal>::=<type_sign_decimal>|<type_sign_float>
-<digit> ::= [\d]
-<char> ::= [\w]
-<identifier>::=[a-zA-Z][a-zA-Z0-9]*
-<string>::='"',([\w]^")*,'"'
+;--Var--
+<var_declaration>::=(<var_types> <IDENTIFIER>';')|(<var_types> <IDENTIFIER> '=' <literals>';')
+<var_init>::=<IDENTIFIER> '=' <boole_expr>
+;--Blocks--
+<block_statments>::=<if>|<for>|<while>
+<block>::='{'<com_block>*'}' | <comp_block>
+<statement>::=<body>';'
+<comp_block>::=<block_statments>|<block>|<statement>
+<body>::=<return>|<assignment>|<bool_expr>
 
-;--Other--
+;--Statements--
+;----for
+<for>::='for' '('for_expr?';'bool_expr?';'for_expr*')'<block>
+<for_expr>::=<assignment>|<bool_expr>
+;----if
+<if>::=<if_only>|<if_else>
+<if_only>::='if' '('bool_expr')' block
+<if_else>::='if' '('bool_expr')' block 'else' block
+;----while
+<while>::='while' '('bool_expr')' block
 
-<sign>::= +|-
-<keyword>::= <type>|<boolean_literal>|function|program|for|while|if|then|else|continue|break|const|def|div
+
+;--Expresion--
+<bool_expr>::=<bool_term>|<bool_term> '|' <bool_term>
+<bool_term>::=<bool_not_factor> | <bool_not_factor> '&' <bool_term>
+<bool_not_factor>::=<bool_factor> | '!'<bool_factor>
+<bool_factor>::=<bin_expr>|<bin_expr> '!=' <bin_expr>|<bin_expr> '==' <bin_expr>|
+				<bin_expr> '>=' <bin_expr>|<bin_expr> '<=' <bin_expr>|
+				<bin_expr> '>' <bin_expr>|<bin_expr> '<' <bin_expr>|
+<bin_expr>::=<bin_factor>|'-' <bin_factor>
+<bin_factor>::=term|term '+' term|term '-' term
+<term>::=<sign_factor>|<sign_factor> '*' <sign_factor>|<sign_factor> '/' <sign_factor>|<sign_factor> 'div' <sign_factor>|<sign_factor> 'mod' <sign_factor>
+<sign_factor>::=<numeric_literals> |'-' <numeric_literals> | <unsign_factor>
+<unsign_factor>::='(' <bin_factor>')' | <IDENTIFIER> | <STRING> | <bool_literal>
