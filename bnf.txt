@@ -37,7 +37,7 @@
 
 ;--Var--
 <var_declaration>::=(<var_types> <IDENTIFIER>';')|(<var_types> <IDENTIFIER> '=' <literals>';')
-<var_init>::=<IDENTIFIER> '=' <boole_expr>
+<var_init>::=<IDENTIFIER> '=' <bool_expr>
 ;--Blocks--
 <block_statments>::=<if>|<for>|<while>
 <block>::='{'<com_block>*'}' | <comp_block>
@@ -47,14 +47,14 @@
 
 ;--Statements--
 ;----for
-<for>::='for' '('for_expr?';'bool_expr?';'for_expr*')'<block>
+<for>::='for' '('<for_expr>?';'<bool_expr>?';'<for_expr>*')'<block>
 <for_expr>::=<assignment>|<bool_expr>
 ;----if
 <if>::=<if_only>|<if_else>
-<if_only>::='if' '('bool_expr')' block
-<if_else>::='if' '('bool_expr')' block 'else' block
+<if_only>::='if' '('<bool_expr>')' <block>
+<if_else>::='if' '('<bool_expr>')' <block> 'else' <block>
 ;----while
-<while>::='while' '('bool_expr')' block
+<while>::='while' '('<bool_expr>')' <block>
 
 
 ;--Expresion--
@@ -65,7 +65,7 @@
 				<bin_expr> '>=' <bin_expr>|<bin_expr> '<=' <bin_expr>|
 				<bin_expr> '>' <bin_expr>|<bin_expr> '<' <bin_expr>|
 <bin_expr>::=<bin_factor>|'-' <bin_factor>
-<bin_factor>::=term|term '+' term|term '-' term
+<bin_factor>::=<term>|<term> '+' <term>|<term> '-' <term>
 <term>::=<sign_factor>|<sign_factor> '*' <sign_factor>|<sign_factor> '/' <sign_factor>|<sign_factor> 'div' <sign_factor>|<sign_factor> 'mod' <sign_factor>
 <sign_factor>::=<numeric_literals> |'-' <numeric_literals> | <unsign_factor>
 <unsign_factor>::='(' <bin_factor>')' | <IDENTIFIER> | <STRING> | <bool_literal>
