@@ -1,13 +1,18 @@
 package com.raxacoricofallapatorius.analyzer;
 
+import java.sql.Blob;
 import java.util.ArrayList;
 
 import com.raxacoricofallapatorius.service.Function;
 import com.raxacoricofallapatorius.service.SyntaxException;
 import com.raxacoricofallapatorius.service.Token;
 import com.raxacoricofallapatorius.service.TokenType;
+import com.raxacoricofallapatorius.service.statements.Block;
+import com.raxacoricofallapatorius.service.statements.ForStatement;
+import com.raxacoricofallapatorius.service.statements.IfStatement;
 import com.raxacoricofallapatorius.service.statements.InputVarStatement;
 import com.raxacoricofallapatorius.service.statements.LocalVarStatement;
+import com.raxacoricofallapatorius.service.statements.Statement;
 
 public class SyntaxAnalyzer {
 	private Token[] tokens;
@@ -50,7 +55,6 @@ public class SyntaxAnalyzer {
 	private void consume() {
 		nextIndex++;
 	}
-
 	/**
 	 * parse function method
 	 * 
@@ -76,11 +80,6 @@ public class SyntaxAnalyzer {
 					+ ":" + look().getColumn());
 		consume();
 		InputVarStatement inputVarStatement = parseFuncArguments();
-		// looking for begin of function
-		consume();
-		if (look().getType() != TokenType.TK_S_LEFT_BRACE)
-			throw new SyntaxException("'{' expected at " + look().getLine()
-					+ ":" + look().getColumn());
 		// looking for declaration of local variables
 		consume();
 		LocalVarStatement localVarStatement = new LocalVarStatement();
@@ -92,10 +91,113 @@ public class SyntaxAnalyzer {
 			consume();
 			localVarStatement = parseLocalVariables();
 		}
-		do{
-			
+		consume();
+		if (look().getType() != TokenType.TK_S_LEFT_BRACE)
+			throw new SyntaxException("'{' expected at " + look().getLine()
+					+ ":" + look().getColumn());
+		consume();
+		ArrayList<Statement> funcstmt = new ArrayList<Statement>();
+		while(look().getType()!=TokenType.TK_S_RIGHT_BRACE){
+			if(look().getType()==TokenType.TK_K_IF){
+				IfStatement ifstmt = parseIF();
+				funcstmt.add(ifstmt);
+			}else if(look().getType()==TokenType.TK_K_FOR){
+				ForStatement forstmt = parseFOR();
+				funcstmt.add(forstmt);
+			}else if(look().getType()==TokenType.TK_K_WHILE){
+				WhileStatement whilestmt = parseWHILE();
+				funcstmt.add(whilestmt);
+			}else if(look().getType()==TokenType.TK_ID){
+				VarInit varstmt = parseVarInit();
+				funcstmt.add(varstmt);
+			}
+			consume();
 		}
-		
+		Statement statment = new Statement();
+	}
+
+	private VarInit parseVarInit() throws SyntaxException {
+		VarInit varinit = new VarInit();
+		varinit.addStmt(look());
+		consume();
+		if(look().getType()!=TokenType.TK_S_INIT)
+			throw new SyntaxException("'=' expected at " + look().getLine()
+					+ ":" + look().getColumn());
+		consume();
+		while(look().getType()!=TokenType.TK_S_SEMICOLON){
+			varinit.addStmt(look());
+			consume();
+		}
+		return varinit;
+	}
+
+	private WhileStatement parseWHILE() throws SyntaxException {
+		WhileStatement whilestmt = new WhileStatement();
+		consume();
+		if (look().getType() != TokenType.TK_S_LEFT_PARENT)
+			throw new SyntaxException("'(' expected at " + look().getLine()
+					+ ":" + look().getColumn());
+		consume();
+		while(look().getType()!=TokenType.TK_S_RIGHT_PARENT){
+			whilestmt.addExprs(look());
+			consume();
+		}
+		return whilestmt;
+	}
+
+	private ForStatement parseFOR() throws SyntaxException {
+		ForStatement forstmt = new ForStatement();
+		consume();
+		if(look().getType()!=TokenType.TK_S_LEFT_PARENT)
+			throw new SyntaxException("'(' expected at " + look().getLine()
+					+ ":" + look().getColumn());
+		consume();
+		while(look().getType()!=TokenType.TK_S_SEMICOLON){
+			forstmt.addEx1(look());
+			consume();
+		}
+		consume();
+		while(look().getType()!=TokenType.TK_S_SEMICOLON){
+			forstmt.addExpres(look());
+			consume();
+		}
+		while(look().getType()!=TokenType.TK_S_RIGHT_PARENT){
+			forstmt.addEx2(look());
+			consume();
+		}
+		if(look().getType()!=TokenType.TK_S_LEFT_BRACE)
+			throw new SyntaxException("'{' expected at " + look().getLine()
+					+ ":" + look().getColumn());
+		consume();
+		Block block = blockParse();
+		forstmt.setBlock(block);
+		return forstmt;
+	}
+
+	private IfStatement parseIF() throws SyntaxException {
+		IfStatement ifstmt = new IfStatement();
+		consume();
+		if(look().getType()!=TokenType.TK_S_LEFT_PARENT)
+			throw new SyntaxException("'(' expected at " + look().getLine()
+					+ ":" + look().getColumn());
+		consume();
+		while(look().getType()!=TokenType.TK_S_RIGHT_PARENT){
+			ifstmt.addExpres(look());
+			consume();
+		}
+		consume();
+		if(look().getType()!=TokenType.TK_S_LEFT_BRACE)
+			throw new SyntaxException("'{' expected at " + look().getLine()
+					+ ":" + look().getColumn());
+		Block block = blockParse();
+		ifstmt.setBlock(block);
+		return ifstmt;
+	}
+
+	//Main thin to be done!!!!!!!!!!!!!!
+	private Block blockParse() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 
 	/**
