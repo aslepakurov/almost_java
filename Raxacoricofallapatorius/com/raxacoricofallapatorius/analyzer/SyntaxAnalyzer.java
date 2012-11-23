@@ -59,6 +59,12 @@ public class SyntaxAnalyzer {
 	 */
 	private Function parseFunction() throws SyntaxException {
 		consume();
+		TokenType funcReturn = look().getType();
+		if(funcReturn!=TokenType.TK_K_BOOL && funcReturn!=TokenType.TK_K_FLOAT && 
+			funcReturn!=TokenType.TK_K_INT && funcReturn!=TokenType.TK_K_VOID && funcReturn!=TokenType.TK_K_STR)
+			throw new SyntaxException("function return type expected at "
+					+ look().getLine() + ":" + look().getColumn());
+		consume();	
 		if (look().getType() != TokenType.TK_ID)
 			throw new SyntaxException("function name expected at "
 					+ look().getLine() + ":" + look().getColumn());
@@ -86,7 +92,10 @@ public class SyntaxAnalyzer {
 			consume();
 			localVarStatement = parseLocalVariables();
 		}
-		// next step : parsing function's inner code
+		do{
+			
+		}
+		
 	}
 
 	/**
