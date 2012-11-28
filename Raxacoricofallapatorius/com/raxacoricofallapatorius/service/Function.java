@@ -1,5 +1,6 @@
 package com.raxacoricofallapatorius.service;
 
+import com.raxacoricofallapatorius.service.statements.InputVarStatement;
 import com.raxacoricofallapatorius.service.statements.Statement;
 
 /**
@@ -20,53 +21,26 @@ public class Function {
 	/**
 	 * array of input variables types
 	 */
-	private TokenType[] inputVariablesTypes;
-	/**
-	 * array of input variables names
-	 */
-	private String[] inputVariablesNames;
-	/**
-	 * statements of function
-	 */
 	private Statement[] statements;
-
-	/**
-	 * constructor of function
-	 * 
-	 * @param name
-	 *            function name
-	 * @param returnType
-	 *            function return type
-	 * @param inputVariablesTypes
-	 *            array of input variables types
-	 * @param inputVariablesNames
-	 *            array of input variables names
-	 */
+	private InputVarStatement variables;
+	
 	public Function(String name, TokenType returnType,
-			TokenType[] inputVariablesTypes, String[] inputVariablesNames) {
+			InputVarStatement variables) {
 		this.name = name;
 		this.returnType = returnType;
-		this.inputVariablesTypes = inputVariablesTypes;
-		this.inputVariablesNames = inputVariablesNames;
+		this.variables = variables;
+	}
+	
+	
+	public InputVarStatement getVariables() {
+		return variables;
 	}
 
-	/**
-	 * getter for function's array of input variables types
-	 * 
-	 * @return array of input variables types
-	 */
-	public TokenType[] getInputVariablesTypes() {
-		return inputVariablesTypes;
+
+	public void setVariables(InputVarStatement variables) {
+		this.variables = variables;
 	}
 
-	/**
-	 * getter for function's array of input variables names
-	 * 
-	 * @return array of input variables names
-	 */
-	public String[] getInputVariablesNames() {
-		return inputVariablesNames;
-	}
 
 	/**
 	 * getter for function's name
