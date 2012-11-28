@@ -1,6 +1,5 @@
 package com.raxacoricofallapatorius.analyzer;
 
-import java.sql.Blob;
 import java.util.ArrayList;
 
 import com.raxacoricofallapatorius.service.Function;
@@ -11,8 +10,9 @@ import com.raxacoricofallapatorius.service.statements.Block;
 import com.raxacoricofallapatorius.service.statements.ForStatement;
 import com.raxacoricofallapatorius.service.statements.IfStatement;
 import com.raxacoricofallapatorius.service.statements.InputVarStatement;
-import com.raxacoricofallapatorius.service.statements.LocalVarStatement;
 import com.raxacoricofallapatorius.service.statements.Statement;
+import com.raxacoricofallapatorius.service.statements.VarDecl;
+import com.raxacoricofallapatorius.service.statements.Variable;
 
 public class SyntaxAnalyzer {
 	private Token[] tokens;
@@ -80,23 +80,13 @@ public class SyntaxAnalyzer {
 					+ ":" + look().getColumn());
 		consume();
 		InputVarStatement inputVarStatement = parseFuncArguments();
-		// looking for declaration of local variables
-		consume();
-		LocalVarStatement localVarStatement = new LocalVarStatement();
-		if (look().getType() == TokenType.TK_K_DEF) {
-			consume();
-			if (look().getType() != TokenType.TK_S_LEFT_BRACE)
-				throw new SyntaxException("'{' expected at " + look().getLine()
-						+ ":" + look().getColumn());
-			consume();
-			localVarStatement = parseLocalVariables();
-		}
 		consume();
 		if (look().getType() != TokenType.TK_S_LEFT_BRACE)
 			throw new SyntaxException("'{' expected at " + look().getLine()
 					+ ":" + look().getColumn());
 		consume();
 		ArrayList<Statement> funcstmt = new ArrayList<Statement>();
+		ArrayList<Variable> funcvar = new ArrayList<Variable>();
 		while(look().getType()!=TokenType.TK_S_RIGHT_BRACE){
 			if(look().getType()==TokenType.TK_K_IF){
 				IfStatement ifstmt = parseIF();
@@ -110,10 +100,88 @@ public class SyntaxAnalyzer {
 			}else if(look().getType()==TokenType.TK_ID){
 				VarInit varstmt = parseVarInit();
 				funcstmt.add(varstmt);
+			}else if(look().getType()==TokenType.TK_K_DEF){
+				Variable var = parseVarDecl();
+				funcstmt.add(new VarDecl(var));
+				funcvar.add(var);
+			}else if(look().getType()==TokenType.TK_K_RETURN){
+				ReturnStatement funcret = parseReturn();
+				funcstmt.add(funcret);
+			}else if(look().getType()==TokenType.TK_K_CALL){
+				CallStatement funccall = parseCall();
+				funcstmt.add(funccall);
+			}else{														//whole new a lot too add
+				throw new SyntaxException(
+						"Invalid statement at " + look().getLine()
+										+ ":" + look().getColumn());
 			}
 			consume();
+			
 		}
-		Statement statment = new Statement();
+		return new Function(funcName, funcReturn,inputVarStatement);
+	}
+
+	private CallStatement parseCall() {
+		ArrayList<Token> tokenarr = new ArrayList<Token>();
+		consume();
+		while(look().getType()!=TokenType.TK_S_SEMICOLON){
+			tokenarr.add(look());
+			consume();
+		}
+		Token[] tokens = (Token[]) tokenarr.toArray();
+		CallStatement callstmt = new CallStatement(tokens);
+		return callstmt;
+	}
+
+	private ReturnStatement parseReturn() {
+		consume();
+		ArrayList<Token> tokenarr = new ArrayList<Token>();
+		while(look().getType()!=TokenType.TK_S_SEMICOLON){
+			tokenarr.add(look());
+			consume();
+		}
+		Token[] tokens = (Token[]) tokenarr.toArray();
+		ReturnStatement retStmt = new ReturnStatement(tokens);
+		return retStmt;
+	}
+
+	private Variable parseVarDecl() throws SyntaxException {
+		String name = "";
+		consume();
+		if(look().getType() != TokenType.TK_ID)
+			throw new SyntaxException("Variable name expected at " + look().getLine()
+					+ ":" + look().getColumn());
+		name = look().getName();
+		consume();
+		if(look().getType() != TokenType.TK_S_SEMICOLON)
+			throw new SyntaxException("':' expected at " + look().getLine()
+					+ ":" + look().getColumn());
+		consume();
+		TokenType type = look().getType();
+		if (type != TokenType.TK_STRING || type != TokenType.TK_INT
+				|| type != TokenType.TK_FLOAT
+				|| type != TokenType.TK_K_BOOL)
+			throw new SyntaxException(
+					"Variable return type expected at "
+							+ look().getLine() + ":" + look().getColumn());
+		consume();
+		if(look().getType()==TokenType.TK_S_INIT){
+			consume();
+			Token value = null;
+			if(look().getType()==TokenType.TK_INT || look().getType()==TokenType.TK_FLOAT ||
+					look().getType()==TokenType.TK_STRING || look().getType()==TokenType.TK_K_TRUE ||
+					look().getType()==TokenType.TK_K_FALSE){
+				value = look();
+			}
+			else
+				throw new SyntaxException(
+						"Variable value expected at "
+								+ look().getLine() + ":" + look().getColumn());
+			return  new Variable(name, type, true, value);
+		}
+		else{
+			return new Variable(name, type, false, null);
+		}
 	}
 
 	private VarInit parseVarInit() throws SyntaxException {
@@ -233,55 +301,6 @@ public class SyntaxAnalyzer {
 				return new InputVarStatement(types.toArray(tokens),
 						ids.toArray(tokens));
 			}
-		}
-	}
-
-	/**
-	 * parse function's local variable declarations method
-	 * 
-	 * @return object of function's local declarations class
-	 * @throws SyntaxException
-	 */
-	private LocalVarStatement parseLocalVariables() throws SyntaxException {
-		ArrayList<Token> types = new ArrayList<Token>();
-		ArrayList<Token> ids = new ArrayList<Token>();
-		ArrayList<Token> initValues = new ArrayList<Token>();
-		TokenType type;
-		while (true) {
-			if ((type = look().getType()) == TokenType.TK_S_RIGHT_BRACE) {
-				Token[] tokens = new Token[types.size()];
-				return new LocalVarStatement(types.toArray(tokens),
-						ids.toArray(tokens), initValues.toArray(tokens));
-			}
-			if (type != TokenType.TK_K_INT || type != TokenType.TK_K_FLOAT
-					|| type != TokenType.TK_K_STR
-					|| type != TokenType.TK_K_BOOL)
-				throw new SyntaxException("Variable type expected at "
-						+ look().getLine() + ":" + look().getColumn());
-			types.add(look());
-			consume();
-			if (look().getType() != TokenType.TK_ID)
-				throw new SyntaxException("Variable id expected at "
-						+ look().getLine() + ":" + look().getColumn());
-			ids.add(look());
-			consume();
-			if (look().getType() == TokenType.TK_S_SEMICOLON) {
-				consume();
-				continue;
-			}
-			if (look().getType() != TokenType.TK_S_INIT)
-				throw new SyntaxException("';' expected at " + look().getLine()
-						+ ":" + look().getColumn());
-			consume();
-			type = look().getType();
-			if (type != TokenType.TK_STRING || type != TokenType.TK_INT
-					|| type != TokenType.TK_FLOAT
-					|| type != TokenType.TK_K_TRUE
-					|| type != TokenType.TK_K_FALSE)
-				throw new SyntaxException(
-						"Variable initialization expected at "
-								+ look().getLine() + ":" + look().getColumn());
-			initValues.add(look());
 		}
 	}
 }
