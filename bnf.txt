@@ -28,21 +28,21 @@
 <return_types>::<var_types>|<void_type>
 
 ;--Functions--
-<function_declaration>::='func' <return_types> <IDENTIFIER>'('<list_of_parametrs>')'<local_var_decl>?<comp_block>
+<function_declaration>::='func' <return_types> <IDENTIFIER>'('<list_of_parametrs>')'<comp_block>
 <list_of_parametrs><parametr>(','<parametr>)*
 <parametr>::=<var_types> <IDENTIFIER> 
-<local_var_decl>::=(<var_declaration>)*
 <function_call>::='call' <IDENTIFIER>'('<IDENTIFIER>(','<IDENTIFIER>)*')'
 <return>::='return' (<IDENTIFIER>|<expression>)? 
 
 ;--Var--
 <var_declaration>::=(<var_types> <IDENTIFIER>';')|(<var_types> <IDENTIFIER> '=' <literals>';')
 <var_init>::=<IDENTIFIER> '=' <bool_expr>
+<var_manipulation>::=<var_declaration>|<var_init>
 ;--Blocks--
 <block_statments>::=<if>|<for>|<while>
 <block>::='{'<com_block>*'}' | <comp_block>
 <statement>::=<body>';'
-<comp_block>::=<block_statments>|<block>|<statement>
+<comp_block>::=<block_statments>|<block>|<statement>|<var_manipulation>
 <body>::=<return>|<assignment>|<bool_expr>
 
 ;--Statements--
