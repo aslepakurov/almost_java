@@ -116,6 +116,12 @@ public enum TokenType {
 			return "div";
 		}
 	}, // div
+	TK_K_RETURN{
+		@Override
+		public String getName() {
+			return "return";
+		}
+	}, //return
 
 	// --------Separators-----------
 	TK_S_MOD {
@@ -243,12 +249,22 @@ public enum TokenType {
 			return ",";
 		}
 	}, // ,
+	
+	
 	TK_S_SEMICOLON { // ;
 		@Override
 		public String getName() {
 			return ";";
 		}
 	},
+	TK_S_LATER { // :
+		@Override
+		public String getName() {
+			return ":";
+		}
+	},
+	
+	
 	TK_EOP { // end of program token
 
 		@Override
