@@ -29,7 +29,7 @@
 
 ;--Functions--
 <function_declaration>::='func' <return_types> <IDENTIFIER>'('<list_of_parametrs>')'<comp_block>
-<list_of_parametrs><parametr>(','<parametr>)*
+<list_of_parametrs>::=<parametr>(','<parametr>)*
 <parametr>::=<var_types> <IDENTIFIER> 
 <function_call>::='call' <IDENTIFIER>'('<IDENTIFIER>(','<IDENTIFIER>)*')'
 <return>::='return' (<IDENTIFIER>|<expression>)? 
@@ -38,6 +38,7 @@
 <var_declaration>::=(<var_types> <IDENTIFIER>';')|(<var_types> <IDENTIFIER> '=' <literals>';')
 <var_init>::=<IDENTIFIER> '=' <bool_expr>
 <var_manipulation>::=<var_declaration>|<var_init>
+
 ;--Blocks--
 <block_statments>::=<if>|<for>|<while>
 <block>::='{'<com_block>*'}' | <comp_block>
