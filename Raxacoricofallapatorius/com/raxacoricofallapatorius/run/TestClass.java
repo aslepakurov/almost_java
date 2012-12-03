@@ -1,74 +1,41 @@
 package com.raxacoricofallapatorius.run;
 
-//import com.raxacoricofallapatorius.analyzer.LexicalAnalyzer;
+import java.util.ArrayList;
+
 import com.raxacoricofallapatorius.analyzer.LexicalAnalyzer;
+import com.raxacoricofallapatorius.analyzer.SyntaxAnalyzer;
+import com.raxacoricofallapatorius.service.Function;
 import com.raxacoricofallapatorius.service.LexerException;
+import com.raxacoricofallapatorius.service.SyntaxException;
 import com.raxacoricofallapatorius.service.Token;
 import com.raxacoricofallapatorius.service.TokenType;
 
-//package com.raxacoricofallapatorius.run;
-//
-//import java.util.ArrayList;
-//
-//import com.raxacoricofallapatorius.analyzer.LexicalAnalyzer;
-//import com.raxacoricofallapatorius.service.ParseException;
-//import com.raxacoricofallapatorius.service.Token;
-//
 public class TestClass {
 	public static void main(String[] args) {
+		ArrayList<Token> tokens = new ArrayList<Token>();
 		LexicalAnalyzer l = new LexicalAnalyzer(
-				"qwer$qwe >$12v int float void xDD");
+				"func int main(int i, bool f,str s){" +
+						"call main(t,e,w);" +
+				"}");
 		Token token = null;
 		try {
 			do {
 				token = l.lex();
-				System.out.println("token = " + token);
+				tokens.add(token);
+//				System.out.println("token = " + token);
 			} while (token.getType() != TokenType.TK_EOP);
 		} catch (LexerException e) {
 			System.out.println("Error : " + e);
 		}
+		Token[] tok = new Token[tokens.size()];
+		for(int i=0;i<tok.length;i++){
+			tok[i]=tokens.get(i);
+		}
+		SyntaxAnalyzer sa = new SyntaxAnalyzer(tok);
+		try {
+			Function[] functions = sa.parse();
+		} catch (SyntaxException e) {
+			System.out.println("Error : " + e);
+		}
 	}
 }
-// System.out.println("~~~~~~~~~~~~~~~~first test~~~~~~~~~~~~~~~~");
-// LexicalAnalyzer la = new LexicalAnalyzer(
-// "p for drew while serega true vlad\nawesome(var{break else paper if somethin}mouse/int 4 float 4.5 str \"sss\" pampam)");
-// ArrayList<Token> tokenlist = null;
-// try {
-// la.parse();
-// tokenlist = la.getTokens();
-// for (Token token : tokenlist) {
-// System.out.println(token.toString());
-// }
-// } catch (ParseException e) {
-// System.out.println(e);
-// }
-//
-// System.out.println("~~~~~~~~~~~~~~~~second test~~~~~~~~~~~~~~~~");
-// la = new LexicalAnalyzer(
-// "void\"123 if\" \"true_\"\"breakdown\" \nmake total insane \"\"\n void \"\"");
-// try {
-// la.parse();
-// tokenlist = la.getTokens();
-// for (Token token : tokenlist) {
-// System.out.println(token.toString());
-// }
-// } catch (ParseException e) {
-// System.out.println(e);
-// }
-//
-// System.out.println("------------------------");
-//
-//
-// System.out.println("~~~~~~~~~~~~~~~~Third test~~~~~~~~~~~~~~~~");
-// la = new LexicalAnalyzer("int 42 float 3.14 tt 13\n");
-// try {
-// la.parse();
-// tokenlist = la.getTokens();
-// for (Token token : tokenlist) {
-// System.out.println(token.toString());
-// }
-// } catch (ParseException e) {
-// System.out.println(e);
-// }
-// }
-// }
