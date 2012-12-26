@@ -1,7 +1,7 @@
 package com.raxacoricofallapatorius.service;
 
 import com.raxacoricofallapatorius.service.statements.InputVarStatement;
-import com.raxacoricofallapatorius.service.statements.Statement;
+import com.raxacoricofallapatorius.statements.Statement;
 
 /**
  * Function class

@@ -1,6 +1,7 @@
 package com.raxacoricofallapatorius.service.statements;
 
 import com.raxacoricofallapatorius.service.Token;
+import com.raxacoricofallapatorius.statements.Statement;
 
 public class InputVarStatement extends Statement {
 	/**

@@ -5,12 +5,8 @@ import com.raxacoricofallapatorius.service.Function;
 import com.raxacoricofallapatorius.service.SyntaxException;
 import com.raxacoricofallapatorius.service.Token;
 import com.raxacoricofallapatorius.service.TokenType;
-import com.raxacoricofallapatorius.service.statements.Block;
 import com.raxacoricofallapatorius.service.statements.ForStatement;
-import com.raxacoricofallapatorius.service.statements.IfStatement;
 import com.raxacoricofallapatorius.service.statements.InputVarStatement;
-import com.raxacoricofallapatorius.service.statements.ReturnStatement;
-import com.raxacoricofallapatorius.service.statements.Statement;
 import com.raxacoricofallapatorius.service.statements.VarDecl;
 import com.raxacoricofallapatorius.service.statements.VarInit;
 import com.raxacoricofallapatorius.service.statements.Variable;
@@ -18,7 +14,11 @@ import com.raxacoricofallapatorius.service.statements.Variable;
 //Add arrays!!!!!
 //Don't like warnings
 //Maybe reorganize block parse - add to block to function!
-import com.raxacoricofallapatorius.service.statements.WhileStatement;
+import com.raxacoricofallapatorius.statements.BlockStmt;
+import com.raxacoricofallapatorius.statements.IfStatement;
+import com.raxacoricofallapatorius.statements.ReturnStatement;
+import com.raxacoricofallapatorius.statements.Statement;
+import com.raxacoricofallapatorius.statements.WhileStatement;
 
 public class SyntaxAnalyzer {
 	private Token[] tokens;
@@ -244,7 +244,7 @@ public class SyntaxAnalyzer {
 			throw new SyntaxException("'{' expected at " + look().getLine()
 					+ ":" + look().getColumn());
 		consume();
-		Block block = blockParse();
+		BlockStmt block = blockParse();
 		forstmt.setBlock(block);
 		return forstmt;
 	}
@@ -264,13 +264,13 @@ public class SyntaxAnalyzer {
 		if(look().getType()!=TokenType.TK_S_LEFT_BRACE)
 			throw new SyntaxException("'{' expected at " + look().getLine()
 					+ ":" + look().getColumn());
-		Block block = blockParse();
+		BlockStmt block = blockParse();
 		ifstmt.setBlock(block);
 		return ifstmt;
 	}
 
 	//Main thin to be done!!!!!!!!!!!!!!
-	private Block blockParse() throws SyntaxException {
+	private BlockStmt blockParse() throws SyntaxException {
 		consume();
 		ArrayList<Statement> blockstmt = new ArrayList<Statement>();
 		ArrayList<Variable> blockvar = new ArrayList<Variable>();
@@ -304,7 +304,7 @@ public class SyntaxAnalyzer {
 			}
 			consume();
 		}
-		return new Block((Statement[])blockstmt.toArray(),(Variable[])blockvar.toArray());
+		return new BlockStmt((Statement[])blockstmt.toArray(),(Variable[])blockvar.toArray());
 	}
 
 	/**
