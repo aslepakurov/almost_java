@@ -1,6 +1,7 @@
 package com.raxacoricofallapatorius.service;
 
-import com.raxacoricofallapatorius.service.statements.InputVarStatement;
+import java.util.ArrayList;
+
 import com.raxacoricofallapatorius.statements.Statement;
 
 /**
@@ -21,23 +22,24 @@ public class Function {
 	/**
 	 * array of input variables types
 	 */
-	private Statement[] statements;
-	private InputVarStatement variables;
+	private ArrayList<Statement> statements;
+	private ArrayList<VarDecl> variables;
 	
-	public Function(String name, TokenType returnType,
-			InputVarStatement variables) {
+	public Function(String name, TokenType returnType,ArrayList<Statement> statement,
+			ArrayList<VarDecl> variables) {
 		this.name = name;
 		this.returnType = returnType;
+		this.statements = statement;
 		this.variables = variables;
 	}
 	
 	
-	public InputVarStatement getVariables() {
+	public ArrayList<VarDecl> getVariables() {
 		return variables;
 	}
 
 
-	public void setVariables(InputVarStatement variables) {
+	public void setVariables(ArrayList<VarDecl> variables) {
 		this.variables = variables;
 	}
 
@@ -65,7 +67,7 @@ public class Function {
 	 * 
 	 * @param statements
 	 */
-	public void setStatements(Statement[] statements) {
+	public void setStatements(ArrayList<Statement> statements) {
 		this.statements = statements;
 	}
 
@@ -74,7 +76,7 @@ public class Function {
 	 * 
 	 * @return function's statements
 	 */
-	public Statement[] getStatements() {
+	public ArrayList<Statement> getStatements() {
 		return statements;
 	}
 
