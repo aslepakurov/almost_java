@@ -1,8 +1,9 @@
 package com.raxacoricofallapatorius.service;
 
+
 import java.util.ArrayList;
 
-import com.raxacoricofallapatorius.statements.Statement;
+import com.raxacoricofallapatorius.statements.BlockStmt;
 
 /**
  * Function class
@@ -20,29 +21,20 @@ public class Function {
 	 */
 	private TokenType returnType;
 	/**
-	 * array of input variables types
+	 * block of statements
 	 */
-	private ArrayList<Statement> statements;
-	private ArrayList<VarDecl> variables;
-	
-	public Function(String name, TokenType returnType,ArrayList<Statement> statement,
-			ArrayList<VarDecl> variables) {
+	private BlockStmt block;
+	/**
+	 * input parameters
+	 */
+	private ArrayList<VarDecl> param;
+	public Function(String name, TokenType returnType,ArrayList<VarDecl> param,BlockStmt block) {
 		this.name = name;
 		this.returnType = returnType;
-		this.statements = statement;
-		this.variables = variables;
+		this.param = param;
+		this.block = block;
 	}
 	
-	
-	public ArrayList<VarDecl> getVariables() {
-		return variables;
-	}
-
-
-	public void setVariables(ArrayList<VarDecl> variables) {
-		this.variables = variables;
-	}
-
 
 	/**
 	 * getter for function's name
@@ -63,23 +55,16 @@ public class Function {
 	}
 
 	/**
-	 * setter of function statements
-	 * 
-	 * @param statements
-	 */
-	public void setStatements(ArrayList<Statement> statements) {
-		this.statements = statements;
-	}
-
-	/**
 	 * getter of function statements
 	 * 
 	 * @return function's statements
 	 */
-	public ArrayList<Statement> getStatements() {
-		return statements;
+	public BlockStmt getBlock() {
+		return block;
 	}
-
+	public ArrayList<VarDecl> getParameters(){
+		return param;
+	}
 	/**
 	 * equals method
 	 * 
