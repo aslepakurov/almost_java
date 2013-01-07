@@ -238,3 +238,16 @@ public class Junk {}
 //}
 //}
 //}
+
+//private CallStatement parseCall() {
+//	ArrayList<Token> tokenarr = new ArrayList<Token>();
+//	consume();
+//	while(look().getType()!=TokenType.TK_S_SEMICOLON){
+//		tokenarr.add(look());
+//		consume();
+//	}
+//	
+//	Token[] tokens = tokenarr.;
+//	CallStatement callstmt = new CallStatement(tokens);
+//	return callstmt;
+//}
