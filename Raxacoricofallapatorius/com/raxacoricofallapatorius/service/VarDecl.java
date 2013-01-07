@@ -12,14 +12,7 @@ public class VarDecl {
 	public TokenType getVarType() {
 		return varType;
 	}
-	public void setVarType(TokenType varType) {
-		this.varType = varType;
-	}
 	public String getName() {
 		return name;
 	}
-	public void setName(String name) {
-		this.name = name;
-	}
-	
 }
