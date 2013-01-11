@@ -1,6 +1,7 @@
 package com.raxacoricofallapatorius.analyzer;
 import java.util.ArrayList;
 
+import com.raxacoricofallapatorius.expression.Expression;
 import com.raxacoricofallapatorius.service.Function;
 import com.raxacoricofallapatorius.service.SyntaxException;
 import com.raxacoricofallapatorius.service.Token;
@@ -12,11 +13,13 @@ import com.raxacoricofallapatorius.service.statements.InputVarStatement;
 //Don't like warnings
 //Maybe reorganize block parse - add to block to function!
 import com.raxacoricofallapatorius.statements.BlockStmt;
+import com.raxacoricofallapatorius.statements.ForStatement;
 import com.raxacoricofallapatorius.statements.IfStatement;
 import com.raxacoricofallapatorius.statements.ReturnStatement;
 import com.raxacoricofallapatorius.statements.Statement;
 import com.raxacoricofallapatorius.statements.WhileStatement;
-
+//TODO: delete OK notOK thing in the end!
+//TODO: parse expression statement
 public class SyntaxAnalyzer {
 	private Token[] tokens;
 	private int nextIndex = 0;
@@ -45,22 +48,31 @@ public class SyntaxAnalyzer {
 
 	/**
 	 * get next token
-	 * 
+	 * OK
 	 * @return next token
 	 */
 	private Token look() {
 		return tokens[nextIndex];
 	}
-
+	/**
+	 * sneak - peak the next Token
+	 * OK
+	 * @return
+	 */
+	private Token lookAhead(){
+		if(nextIndex+1>=tokens.length) return null;
+		else return tokens[nextIndex+1];
+	}
 	/**
 	 * increase token index
 	 */
 	private void consume() {
 		nextIndex++;
 	}
+	
 	/**
 	 * parse function method
-	 * 
+	 * not OK
 	 * @return object of function class
 	 * @throws SyntaxException
 	 */
@@ -93,176 +105,8 @@ public class SyntaxAnalyzer {
 		BlockStmt funcblock = parseBlock();
 		return new Function(funcName, funcReturn,funcParam,funcblock);
 	}
-	//TODO: next time start her e
-	private BlockStmt parseBlock() throws SyntaxException {
-		consume();
-		ArrayList<Statement> blockstmt = new ArrayList<Statement>();
-		ArrayList<VarDecl> blockvar = new ArrayList<VarDecl>();
-		while(look().getType()!=TokenType.TK_S_RIGHT_BRACE){
-			if(look().getType()==TokenType.TK_K_IF){
-				//TODO: check if
-//				IfStatement ifstmt = parseIF();
-//				blockstmt.add(ifstmt);
-			}else if(look().getType()==TokenType.TK_K_FOR){
-				//TODO: check for
-//				ForStatement forstmt = parseFOR();
-//				blockstmt.add(forstmt);
-			}else if(look().getType()==TokenType.TK_K_WHILE){
-				//TODO: check while
-//				WhileStatement whilestmt = parseWHILE();
-//				blockstmt.add(whilestmt);
-			}else if(look().getType()==TokenType.TK_ID){
-				//TODO: check (change to) varref/stmt
-//				VarInit varstmt = parseVarInit();
-//				blockstmt.add(varstmt);
-			}else if(look().getType()==TokenType.TK_K_RETURN){
-				//TODO: check return
-//				ReturnStatement funcret = parseReturn();
-//				blockstmt.add(funcret);
-			//TODO: variable declaration
-//			}else if(){
-			}else{														//whole new a lot too add
-				throw new SyntaxException(
-						"Invalid statement at " + look().getLine()
-										+ ":" + look().getColumn());
-			}
-			//TODO: get a return check, if return type not void
-			consume();
-		}
-		return new BlockStmt(blockstmt,blockvar);
-	}
-
-	private ReturnStatement parseReturn() {
-		consume();
-		ArrayList<Token> tokenarr = new ArrayList<Token>();
-		while(look().getType()!=TokenType.TK_S_SEMICOLON){
-			tokenarr.add(look());
-			consume();
-		}
-		Token[] tokens = (Token[]) tokenarr.toArray();
-		ReturnStatement retStmt = new ReturnStatement(tokens);
-		return retStmt;
-	}
-
-	private Variable parseVarDecl() throws SyntaxException {
-		String name = "";
-		consume();
-		if(look().getType() != TokenType.TK_ID)
-			throw new SyntaxException("Variable name expected at " + look().getLine()
-					+ ":" + look().getColumn());
-		name = look().getName();
-		consume();
-		if(look().getType() != TokenType.TK_S_SEMICOLON)
-			throw new SyntaxException("':' expected at " + look().getLine()
-					+ ":" + look().getColumn());
-		consume();
-		TokenType type = look().getType();
-		if (type != TokenType.TK_STRING || type != TokenType.TK_INT
-				|| type != TokenType.TK_FLOAT
-				|| type != TokenType.TK_K_BOOL)
-			throw new SyntaxException(
-					"Variable return type expected at "
-							+ look().getLine() + ":" + look().getColumn());
-		consume();
-		if(look().getType()==TokenType.TK_S_INIT){
-			consume();
-			Token value = null;
-			if(look().getType()==TokenType.TK_INT || look().getType()==TokenType.TK_FLOAT ||
-					look().getType()==TokenType.TK_STRING || look().getType()==TokenType.TK_K_TRUE ||
-					look().getType()==TokenType.TK_K_FALSE){
-				value = look();
-			}
-			else
-				throw new SyntaxException(
-						"Variable value expected at "
-								+ look().getLine() + ":" + look().getColumn());
-			return  new Variable(name, type, true, value);
-		}
-		else{
-			return new Variable(name, type, false, null);
-		}
-	}
-
-	private VarInit parseVarInit() throws SyntaxException {
-		VarInit varinit = new VarInit();
-		varinit.addStmt(look());
-		consume();
-		if(look().getType()!=TokenType.TK_S_INIT)
-			throw new SyntaxException("'=' expected at " + look().getLine()
-					+ ":" + look().getColumn());
-		consume();
-		while(look().getType()!=TokenType.TK_S_SEMICOLON){
-			varinit.addStmt(look());
-			consume();
-		}
-		return varinit;
-	}
-
-	private WhileStatement parseWHILE() throws SyntaxException {
-		WhileStatement whilestmt = new WhileStatement();
-		consume();
-		if (look().getType() != TokenType.TK_S_LEFT_PARENT)
-			throw new SyntaxException("'(' expected at " + look().getLine()
-					+ ":" + look().getColumn());
-		consume();
-		while(look().getType()!=TokenType.TK_S_RIGHT_PARENT){
-			whilestmt.addExprs(look());
-			consume();
-		}
-		return whilestmt;
-	}
-
-	private ForStatement parseFOR() throws SyntaxException {
-		ForStatement forstmt = new ForStatement();
-		consume();
-		if(look().getType()!=TokenType.TK_S_LEFT_PARENT)
-			throw new SyntaxException("'(' expected at " + look().getLine()
-					+ ":" + look().getColumn());
-		consume();
-		while(look().getType()!=TokenType.TK_S_SEMICOLON){
-			forstmt.addEx1(look());
-			consume();
-		}
-		consume();
-		while(look().getType()!=TokenType.TK_S_SEMICOLON){
-			forstmt.addExpres(look());
-			consume();
-		}
-		while(look().getType()!=TokenType.TK_S_RIGHT_PARENT){
-			forstmt.addEx2(look());
-			consume();
-		}
-		if(look().getType()!=TokenType.TK_S_LEFT_BRACE)
-			throw new SyntaxException("'{' expected at " + look().getLine()
-					+ ":" + look().getColumn());
-		consume();
-		BlockStmt block = parseBlock();
-		forstmt.setBlock(block);
-		return forstmt;
-	}
-
-	private IfStatement parseIF() throws SyntaxException {
-		IfStatement ifstmt = new IfStatement();
-		consume();
-		if(look().getType()!=TokenType.TK_S_LEFT_PARENT)
-			throw new SyntaxException("'(' expected at " + look().getLine()
-					+ ":" + look().getColumn());
-		consume();
-		while(look().getType()!=TokenType.TK_S_RIGHT_PARENT){
-			ifstmt.addExpres(look());
-			consume();
-		}
-		consume();
-		if(look().getType()!=TokenType.TK_S_LEFT_BRACE)
-			throw new SyntaxException("'{' expected at " + look().getLine()
-					+ ":" + look().getColumn());
-		BlockStmt block = parseBlock();
-		ifstmt.setBlock(block);
-		return ifstmt;
-	}
-
-
 	/**
+	 * TODO: VadDecl vs. VarRef
 	 * parse function's arguments method
 	 * OK
 	 * @return object of function's arguments class
@@ -271,21 +115,20 @@ public class SyntaxAnalyzer {
 	private ArrayList<VarDecl> parseFuncParameters() throws SyntaxException {
 		ArrayList<VarDecl> vardecl = new ArrayList<VarDecl>();
 		TokenType type;
+		String name;
 		while (true) {
-			VarDecl vd = new VarDecl();
 			type = look().getType();
 			if (type != TokenType.TK_K_INT && type != TokenType.TK_K_FLOAT
 					&& type != TokenType.TK_K_STR
 					&& type != TokenType.TK_K_BOOL)
 				throw new SyntaxException("Variable type expected at "
 						+ look().getLine() + ":" + look().getColumn());
-			vd.setVarType(look().getType());
 			consume();
 			if (look().getType() != TokenType.TK_ID)
 				throw new SyntaxException("Variable id expected at "
 						+ look().getLine() + ":" + look().getColumn());
-			vd.setName(look().getName());
-			vardecl.add(vd);
+			name = look().getName();
+			vardecl.add(new VarDecl(name, type));
 			consume();
 			if (look().getType() == TokenType.TK_S_COMMA) {
 				consume();
@@ -295,5 +138,122 @@ public class SyntaxAnalyzer {
 				return vardecl;
 			}
 		}
+	}
+	//TODO: delete FOR statement references
+	//TODO: return null 											V
+	private BlockStmt parseBlock() throws SyntaxException {
+		consume();
+		ArrayList<Statement> blockstmt = new ArrayList<Statement>();
+		ArrayList<VarDecl> blockvar = new ArrayList<VarDecl>();
+		while(look().getType()!=TokenType.TK_S_RIGHT_BRACE){
+			if(look().getType()==TokenType.TK_K_IF){
+				IfStatement ifstmt = parseIF();
+				blockstmt.add(ifstmt);
+			}else if(look().getType()==TokenType.TK_K_WHILE){
+				WhileStatement whilestmt = parseWHILE();
+				blockstmt.add(whilestmt);
+				//TODO: continue here
+			}else if(look().getType()==TokenType.TK_ID){
+				//TODO: check (change to) varref/stmt
+//				VarInit varstmt = parseVarInit();
+//				blockstmt.add(varstmt);
+			}else if(look().getType()==TokenType.TK_K_RETURN){
+				//TODO: check return
+				//TODO: get a return check, if return type not void or put into semantic??????
+				ReturnStatement funcret = parseReturn();
+				blockstmt.add(funcret);
+			//TODO: variable declaration
+			//TODO: expression statement!!!
+			}else{														//whole new a lot too add
+				throw new SyntaxException(
+						"Invalid statement at " + look().getLine()
+										+ ":" + look().getColumn());
+			}
+			consume();
+		}
+		return new BlockStmt(blockstmt,blockvar);
+	}
+	/**
+	 * return statement parse
+	 * @return
+	 */
+	private ReturnStatement parseReturn() {
+		consume();
+		Expression expr = parseExpression();
+		return new ReturnStatement(expr);
+	}
+
+//	private VarInit parseVarInit() throws SyntaxException {
+//		VarInit varinit = new VarInit();
+//		varinit.addStmt(look());
+//		consume();
+//		if(look().getType()!=TokenType.TK_S_INIT)
+//			throw new SyntaxException("'=' expected at " + look().getLine()
+//					+ ":" + look().getColumn());
+//		consume();
+//		while(look().getType()!=TokenType.TK_S_SEMICOLON){
+//			varinit.addStmt(look());
+//			consume();
+//		}
+//		return varinit;
+//	}
+	
+	/**
+	 * while statement parse
+	 * OK
+	 * @return
+	 * @throws SyntaxException
+	 */
+	private WhileStatement parseWHILE() throws SyntaxException {
+		consume();
+		if (look().getType() != TokenType.TK_S_LEFT_PARENT)
+			throw new SyntaxException("'(' expected at " + look().getLine()
+					+ ":" + look().getColumn());
+		consume();
+		Expression expr = parseExpression();
+		consume();
+		if(look().getType()!=TokenType.TK_S_LEFT_BRACE)
+			throw new SyntaxException("'{' expected at " + look().getLine()
+					+ ":" + look().getColumn());
+		BlockStmt block = parseBlock();
+		return new WhileStatement(expr, block);
+	}
+	/**
+	 * If statement parse
+	 * OK
+	 * @return
+	 * @throws SyntaxException
+	 */
+	private IfStatement parseIF() throws SyntaxException {
+		consume();
+		if(look().getType()!=TokenType.TK_S_LEFT_PARENT)
+			throw new SyntaxException("'(' expected at " + look().getLine()
+					+ ":" + look().getColumn());
+		consume();
+		Expression expr = parseExpression();
+		consume();
+		if(look().getType()!=TokenType.TK_S_LEFT_BRACE)
+			throw new SyntaxException("'{' expected at " + look().getLine()
+					+ ":" + look().getColumn());
+		BlockStmt thenp = parseBlock();
+		consume();
+		BlockStmt elsep = null;
+		if(lookAhead().getType()==TokenType.TK_K_ELSE){
+			//TODO: double check this
+			consume();
+			consume();
+			if(look().getType()!=TokenType.TK_S_LEFT_BRACE)
+				throw new SyntaxException("'{' expected at " + look().getLine()
+						+ ":" + look().getColumn());
+			elsep = parseBlock();
+		}
+		return new IfStatement(expr, thenp, elsep);
+	}
+	/*
+	 *TODO:!!!! 
+	 */
+	private Expression parseExpression() {
+		// TODO expression parse, end - ; or )
+		return null;
 	}
 }
