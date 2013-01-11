@@ -93,7 +93,7 @@ public class SyntaxAnalyzer {
 		BlockStmt funcblock = parseBlock();
 		return new Function(funcName, funcReturn,funcParam,funcblock);
 	}
-	//TODO: next time start here
+	//TODO: next time start her e
 	private BlockStmt parseBlock() throws SyntaxException {
 		consume();
 		ArrayList<Statement> blockstmt = new ArrayList<Statement>();
