@@ -1,14 +1,23 @@
 package com.raxacoricofallapatorius.statements;
+
+import com.raxacoricofallapatorius.expression.Expression;
+
 public class IfStatement extends Statement {
-	//TODO: add expression
+	private Expression expr;
 	private BlockStmt thenPart;
 	private BlockStmt elsePart;
-	public IfStatement(){
+	public IfStatement(Expression expr,BlockStmt thenPart,BlockStmt elsePart){
+		this.expr = expr;
+		this.thenPart = thenPart;
+		this.elsePart = elsePart;
 	}
-	public void addThen(BlockStmt block){
-		thenPart = block;
+	public Expression getExpr() {
+		return expr;
 	}
-	public void addElse(BlockStmt block){
-		elsePart = block;
+	public BlockStmt getThenPart() {
+		return thenPart;
+	}
+	public BlockStmt getElsePart() {
+		return elsePart;
 	}
 }
