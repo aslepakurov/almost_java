@@ -1,25 +1,26 @@
 package com.raxacoricofallapatorius.analyzer;
-import java.util.ArrayList;
-
+import java.util.ArrayList; 
 import com.raxacoricofallapatorius.expression.Expression;
 import com.raxacoricofallapatorius.service.Function;
 import com.raxacoricofallapatorius.service.SyntaxException;
 import com.raxacoricofallapatorius.service.Token;
 import com.raxacoricofallapatorius.service.TokenType;
 import com.raxacoricofallapatorius.service.VarDecl;
-import com.raxacoricofallapatorius.service.statements.InputVarStatement;
-//Solve the FREAKIN ARRAY TROUBLE 2012!!!!
-//Add arrays!!!!!
-//Don't like warnings
-//Maybe reorganize block parse - add to block to function!
 import com.raxacoricofallapatorius.statements.BlockStmt;
-import com.raxacoricofallapatorius.statements.ForStatement;
 import com.raxacoricofallapatorius.statements.IfStatement;
 import com.raxacoricofallapatorius.statements.ReturnStatement;
 import com.raxacoricofallapatorius.statements.Statement;
 import com.raxacoricofallapatorius.statements.WhileStatement;
+/**
+ * 1st 'n' 2nd todos
+ * @see com.raxacoricofallopatorius.analyzer.SyntaxAnalyzer
+ * @author Barabashka
+ */
+//TODO: add arrays as a structure
+//TODO: delete FOR statement references
 //TODO: delete OK notOK thing in the end!
 //TODO: parse expression statement
+//TODO: parseExpression fix (references i mean)
 public class SyntaxAnalyzer {
 	private Token[] tokens;
 	private int nextIndex = 0;
@@ -139,7 +140,6 @@ public class SyntaxAnalyzer {
 			}
 		}
 	}
-	//TODO: delete FOR statement references
 	//TODO: return null 											V
 	private BlockStmt parseBlock() throws SyntaxException {
 		consume();
@@ -152,11 +152,11 @@ public class SyntaxAnalyzer {
 			}else if(look().getType()==TokenType.TK_K_WHILE){
 				WhileStatement whilestmt = parseWHILE();
 				blockstmt.add(whilestmt);
-				//TODO: continue here
-			}else if(look().getType()==TokenType.TK_ID){
-				//TODO: check (change to) varref/stmt
-//				VarInit varstmt = parseVarInit();
-//				blockstmt.add(varstmt);
+			}else if(look().getType()==TokenType.TK_ID || look().getType()==TokenType.TK_INT || look().getType()==TokenType.TK_FLOAT 
+														|| look().getType()==TokenType.TK_STRING){
+				//TODO: ALL MAGIC HERE!!!!!!!! START HERE!!!!!!  <><><><><><><><><><><><><><><><><><><><><><><><><><>
+				Statement sps = parseSpecialStatement();
+				blockstmt.add(sps);
 			}else if(look().getType()==TokenType.TK_K_RETURN){
 				//TODO: check return
 				//TODO: get a return check, if return type not void or put into semantic??????
@@ -173,8 +173,35 @@ public class SyntaxAnalyzer {
 		}
 		return new BlockStmt(blockstmt,blockvar);
 	}
+	
+	//TODO: CONTINUE HERE!!!!!!!!!!!!!!!!!!!!
+	//TODO: sneak-peek Gribozavr's expressions
+	//TODO: DO ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ NOW!!!   
+	private Statement parseSpecialStatement() {
+		Statement ret = new Statement();
+		ArrayList<Token> tkns = new ArrayList<Token>();
+		consume();
+		boolean isAsssign = false;				
+		int index  = -1;
+		while(look().getType()!=TokenType.TK_S_SEMICOLON){
+			if(look().getType()==TokenType.TK_S_INIT){
+				isAsssign = true;
+				index = tkns.size();
+			}
+			tkns.add(look());
+			consume();
+		}
+		if(isAsssign){
+			
+		}else{
+			
+		}
+		return ret;
+	}
+
 	/**
 	 * return statement parse
+	 * OK
 	 * @return
 	 */
 	private ReturnStatement parseReturn() {
@@ -183,21 +210,6 @@ public class SyntaxAnalyzer {
 		return new ReturnStatement(expr);
 	}
 
-//	private VarInit parseVarInit() throws SyntaxException {
-//		VarInit varinit = new VarInit();
-//		varinit.addStmt(look());
-//		consume();
-//		if(look().getType()!=TokenType.TK_S_INIT)
-//			throw new SyntaxException("'=' expected at " + look().getLine()
-//					+ ":" + look().getColumn());
-//		consume();
-//		while(look().getType()!=TokenType.TK_S_SEMICOLON){
-//			varinit.addStmt(look());
-//			consume();
-//		}
-//		return varinit;
-//	}
-	
 	/**
 	 * while statement parse
 	 * OK
@@ -239,7 +251,7 @@ public class SyntaxAnalyzer {
 		consume();
 		BlockStmt elsep = null;
 		if(lookAhead().getType()==TokenType.TK_K_ELSE){
-			//TODO: double check this
+			//TODO: double check the double consumation - got it?/ not funny =(
 			consume();
 			consume();
 			if(look().getType()!=TokenType.TK_S_LEFT_BRACE)
@@ -248,12 +260,5 @@ public class SyntaxAnalyzer {
 			elsep = parseBlock();
 		}
 		return new IfStatement(expr, thenp, elsep);
-	}
-	/*
-	 *TODO:!!!! 
-	 */
-	private Expression parseExpression() {
-		// TODO expression parse, end - ; or )
-		return null;
 	}
 }
