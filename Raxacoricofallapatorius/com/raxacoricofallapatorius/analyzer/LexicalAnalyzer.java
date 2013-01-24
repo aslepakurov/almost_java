@@ -4,6 +4,7 @@ import com.raxacoricofallapatorius.service.LexerException;
 import com.raxacoricofallapatorius.service.Token;
 import com.raxacoricofallapatorius.service.TokenType;
 import com.raxacoricofallapatorius.service.ConstHolder;
+//TODO: add arrays!
 
 public class LexicalAnalyzer {
 	public int curLine = 1;
