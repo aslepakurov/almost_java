@@ -251,3 +251,18 @@ public class Junk {}
 //	CallStatement callstmt = new CallStatement(tokens);
 //	return callstmt;
 //}
+
+//private VarInit parseVarInit() throws SyntaxException {
+//	VarInit varinit = new VarInit();
+//	varinit.addStmt(look());
+//	consume();
+//	if(look().getType()!=TokenType.TK_S_INIT)
+//		throw new SyntaxException("'=' expected at " + look().getLine()
+//				+ ":" + look().getColumn());
+//	consume();
+//	while(look().getType()!=TokenType.TK_S_SEMICOLON){
+//		varinit.addStmt(look());
+//		consume();
+//	}
+//	return varinit;
+//}
