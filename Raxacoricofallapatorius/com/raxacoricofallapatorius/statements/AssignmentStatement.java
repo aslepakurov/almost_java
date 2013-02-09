@@ -1,20 +1,20 @@
 package com.raxacoricofallapatorius.statements;
 
-import java.util.ArrayList;
 
 import com.raxacoricofallapatorius.expression.Expression;
+import com.raxacoricofallapatorius.expression.VarRefExpression;
 
 public class AssignmentStatement extends Statement {
-	private ArrayList<Expression> LHS;
-	private ArrayList<Expression> RHS;
-	public AssignmentStatement(ArrayList<Expression> LHS,ArrayList<Expression> RHS){
+	private VarRefExpression LHS;
+	private Expression RHS;
+	public AssignmentStatement(VarRefExpression LHS,Expression RHS){
 		this.LHS = LHS;
 		this.RHS = RHS;
 	}
-	public ArrayList<Expression> getLHS() {
+	public VarRefExpression getLHS() {
 		return LHS;
 	}
-	public ArrayList<Expression> getRHS() {
+	public Expression getRHS() {
 		return RHS;
 	}
 	

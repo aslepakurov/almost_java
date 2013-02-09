@@ -1,11 +1,13 @@
 package com.raxacoricofallapatorius.analyzer;
 import java.util.ArrayList; 
 import com.raxacoricofallapatorius.expression.Expression;
+import com.raxacoricofallapatorius.expression.VarRefExpression;
 import com.raxacoricofallapatorius.service.Function;
 import com.raxacoricofallapatorius.service.SyntaxException;
 import com.raxacoricofallapatorius.service.Token;
 import com.raxacoricofallapatorius.service.TokenType;
 import com.raxacoricofallapatorius.service.VarDecl;
+import com.raxacoricofallapatorius.statements.AssignmentStatement;
 import com.raxacoricofallapatorius.statements.BlockStmt;
 import com.raxacoricofallapatorius.statements.IfStatement;
 import com.raxacoricofallapatorius.statements.ReturnStatement;
@@ -20,7 +22,8 @@ import com.raxacoricofallapatorius.statements.WhileStatement;
 //TODO: delete FOR statement references
 //TODO: delete OK notOK thing in the end!
 //TODO: parse expression statement
-//TODO: parseExpression fix (references i mean)
+//TODO: parseExpression - write it bi(ea)ch
+//TODO: bool literal
 public class SyntaxAnalyzer {
 	private Token[] tokens;
 	private int nextIndex = 0;
@@ -107,7 +110,6 @@ public class SyntaxAnalyzer {
 		return new Function(funcName, funcReturn,funcParam,funcblock);
 	}
 	/**
-	 * TODO: VadDecl vs. VarRef
 	 * parse function's arguments method
 	 * OK
 	 * @return object of function's arguments class
@@ -140,7 +142,7 @@ public class SyntaxAnalyzer {
 			}
 		}
 	}
-	//TODO: return null 											V
+	//TODO: return null????? 											
 	private BlockStmt parseBlock() throws SyntaxException {
 		consume();
 		ArrayList<Statement> blockstmt = new ArrayList<Statement>();
@@ -152,19 +154,41 @@ public class SyntaxAnalyzer {
 			}else if(look().getType()==TokenType.TK_K_WHILE){
 				WhileStatement whilestmt = parseWHILE();
 				blockstmt.add(whilestmt);
-			}else if(look().getType()==TokenType.TK_ID || look().getType()==TokenType.TK_INT || look().getType()==TokenType.TK_FLOAT 
-														|| look().getType()==TokenType.TK_STRING){
-				//TODO: ALL MAGIC HERE!!!!!!!! START HERE!!!!!!  <><><><><><><><><><><><><><><><><><><><><><><><><><>
-				Statement sps = parseSpecialStatement();
-				blockstmt.add(sps);
+			}else if(look().getType()==TokenType.TK_K_INT || look().getType()==TokenType.TK_K_FLOAT 
+						|| look().getType()==TokenType.TK_K_STR || look().getType() == TokenType.TK_K_BOOL){
+				TokenType vartype = look().getType();
+				consume();
+				if(look().getType()!=TokenType.TK_ID){
+					throw new SyntaxException(
+							
+							"Variable name missing at: " + look().getLine()
+											+ ":" + look().getColumn());
+				}
+				String varname = look().getName();
+				VarDecl vd = new VarDecl(varname, vartype);
+				blockvar.add(vd);
+				consume();
+				VarRefExpression vre = new VarRefExpression(vd);
+				AssignmentStatement as = null;
+				if(look().getType()==TokenType.TK_S_SEMICOLON){
+					as = new AssignmentStatement(vre, null);
+				}else if(look().getType()==TokenType.TK_S_INIT){
+					Expression expr=parseExpression();
+					as = new AssignmentStatement(vre, expr);
+				}else{
+					throw new SyntaxException(
+							"';' or '=' missing: " + look().getLine()
+											+ ":" + look().getColumn());
+				}
+				blockstmt.add(as);
+//EXPRESSION STATEMENT
+//			}else if(){
 			}else if(look().getType()==TokenType.TK_K_RETURN){
 				//TODO: check return
 				//TODO: get a return check, if return type not void or put into semantic??????
 				ReturnStatement funcret = parseReturn();
 				blockstmt.add(funcret);
-			//TODO: variable declaration
-			//TODO: expression statement!!!
-			}else{														//whole new a lot too add
+			}else{													
 				throw new SyntaxException(
 						"Invalid statement at " + look().getLine()
 										+ ":" + look().getColumn());
@@ -173,32 +197,11 @@ public class SyntaxAnalyzer {
 		}
 		return new BlockStmt(blockstmt,blockvar);
 	}
-	
-	//TODO: CONTINUE HERE!!!!!!!!!!!!!!!!!!!!
-	//TODO: sneak-peek Gribozavr's expressions
-	//TODO: DO ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^ NOW!!!   
-	private Statement parseSpecialStatement() {
-		Statement ret = new Statement();
-		ArrayList<Token> tkns = new ArrayList<Token>();
-		consume();
-		boolean isAsssign = false;				
-		int index  = -1;
-		while(look().getType()!=TokenType.TK_S_SEMICOLON){
-			if(look().getType()==TokenType.TK_S_INIT){
-				isAsssign = true;
-				index = tkns.size();
-			}
-			tkns.add(look());
-			consume();
-		}
-		if(isAsssign){
-			
-		}else{
-			
-		}
-		return ret;
+	//TODO: !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+	private Expression parseExpression() {
+		
+		return null;
 	}
-
 	/**
 	 * return statement parse
 	 * OK

@@ -1,12 +1,14 @@
 package com.raxacoricofallapatorius.statements;
 
-import java.util.ArrayList;
 
 import com.raxacoricofallapatorius.expression.Expression;
 
 public class ExpressionStatement {
-	private ArrayList<Expression> expr;
-	public ExpressionStatement(ArrayList<Expression> expr) {
+	private Expression expr;
+	public ExpressionStatement(Expression expr) {
 		this.expr = expr;
+	}
+	public Expression getExpr() {
+		return expr;
 	}
 }
